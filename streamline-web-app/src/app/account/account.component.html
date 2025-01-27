@@ -1,0 +1,219 @@
+<div class="card" *ngIf="user">
+  <div class="surface-section">
+    <img
+      class="shadow-2 block xl:block m-auto border-round"
+      [src]="getAvatar(user.avatar)"
+      [alt]="user.username"
+    />
+    <div class="font-medium text-3xl text-900 mb-3">{{ user.username }}</div>
+    <ul class="list-none p-0 m-0">
+      <li
+        class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+      >
+        <div class="text-500 w-6 md:w-2 font-medium">Date Created</div>
+        <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+          {{ user.timecreated }}
+        </div>
+      </li>
+      <li
+        class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+      >
+        <div class="text-500 w-6 md:w-2 font-medium">Total Found Funny</div>
+        <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+          {{ user.totalFoundFunny }}
+        </div>
+      </li>
+      <li
+        class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+      >
+        <div class="text-500 w-6 md:w-2 font-medium">Total Found Helpful</div>
+        <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+          {{ user.totalFoundHelpful }}
+        </div>
+      </li>
+      <li
+        class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+      >
+        <div class="text-500 w-6 md:w-2 font-medium">
+          Total Found Not Helpful
+        </div>
+        <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+          {{ user.totalFoundNotHelpful }}
+        </div>
+      </li>
+      <li
+        class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+      >
+        <div class="text-500 w-6 md:w-2 font-medium">Total Products</div>
+        <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+          {{ user.totalProducts }}
+        </div>
+      </li>
+      <li
+        class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+      >
+        <div class="text-500 w-6 md:w-2 font-medium">Total Reviews</div>
+        <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+          {{ user.totalReviews }}
+        </div>
+      </li>
+      <li
+        class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+        *ngIf="user.realname"
+      >
+        <div class="text-500 w-6 md:w-2 font-medium">Full Name</div>
+        <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
+          {{ user.realname }}
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="flex gap-3 mt-4">
+    <div class="tableOuter w-full">
+      <div class="tableHeader">
+        <span class="w-full mb-1 records">{{ totalRecords }} Results</span>
+        <div class="flex flex-column md:flex-row md:justify-content-between">
+          <p-dropdown
+            [options]="sortOptions"
+            [(ngModel)]="sortKey"
+            placeholder="Sort By Reviews"
+            (onChange)="onSortChange($event)"
+            styleClass="mb-2 md:mb-0"
+          ></p-dropdown>
+          <p-multiSelect
+            [options]="reviewTypeFilterOptions"
+            (onChange)="onFilterChange($event)"
+            [(ngModel)]="queryParams.isRecommended"
+            placeholder="Review Type"
+            [filter]="false"
+            [selectAll]="false"
+            class="w-full max-w-17rem w-17rem"
+          ></p-multiSelect>
+        </div>
+      </div>
+      <div class="grid grid-nogutter tableContent">
+        <div class="col-12" *ngFor="let review of reviews; let first = first">
+          <div
+            class="flex align-items-start py-3 px-2"
+            [ngClass]="{ 'border-top-1 surface-border': !first }"
+          >
+            <div
+              class="flex flex-column align-items-start sm:align-items-start gap-3 w-6 md:w-3"
+            >
+              <div
+                class="flex gap-1"
+                [routerLink]="['/user', review['user_id']]"
+              >
+                <img
+                  class="w-4 shadow-2 block xl:block border-round"
+                  [src]="getAvatar(review.avatar)"
+                  [alt]="review.username"
+                />
+                <div class="flex align-items-start gap-3">
+                  <div class="text-2xl font-bold text-900 text">
+                    {{ review.username }}
+                  </div>
+                </div>
+              </div>
+              <div class="flex align-items-start gap-3 date">
+                <div>
+                  {{ review.date }}
+                </div>
+                <app-review-add-edit
+                  [formData]="getEditReviewData(review)"
+                  [id]="review._id"
+                  (onSubmit)="updateReview($event)"
+                  *ngIf="canEditAndDeleteReview(review)"
+                >
+                </app-review-add-edit>
+                <p-button
+                  (click)="deleteReview(review._id)"
+                  label="Delete Review"
+                  *ngIf="canEditAndDeleteReview(review)"
+                ></p-button>
+              </div>
+            </div>
+            <div class="flex sm:flex-column gap-3 sm:gap-2 w-6 md:w-2">
+              <span class="font-semibold">Products: {{ review.products }}</span>
+              <span class="font-semibold">Playtime: {{ review.hours }}</span>
+            </div>
+            <div class="w-5 flex flex-order-0 text flex-column gap-3">
+              <div>
+                {{ review.text }}
+              </div>
+              <div class="text-900 w-full flex flex-column text-center gap-2">
+                <span>Was this review helpful</span>
+                <div
+                  class="flex align-items-center justify-content-center gap-3 flex-wrap"
+                >
+                  <i
+                    class="pi pi-thumbs-up"
+                    style="color: green; font-size: 1.5rem"
+                    (click)="toggleState(review, ReviewReaction.Helpful)"
+                    [ngStyle]="{
+                      color: reaction(review, ReviewReaction.Helpful)
+                        ? 'green'
+                        : ''
+                    }"
+                  ></i
+                  >{{ review.found_helpful | reactionCount }}
+                  <i
+                    class="pi pi-thumbs-down"
+                    style="color: darkred; font-size: 1.5rem"
+                    (click)="toggleState(review, ReviewReaction.NotHelpful)"
+                    [ngStyle]="{
+                      color: reaction(review, ReviewReaction.NotHelpful)
+                        ? 'darkred'
+                        : ''
+                    }"
+                  ></i
+                  >{{ review.found_not_helpful | reactionCount }}
+                  <fa-icon
+                    [icon]="faFaceLaughBeam"
+                    style="font-size: 1.5rem"
+                    (click)="toggleState(review, ReviewReaction.Funny)"
+                    [ngStyle]="{
+                      color: reaction(review, ReviewReaction.Funny)
+                        ? 'gold'
+                        : ''
+                    }"
+                  ></fa-icon
+                  >{{ review.found_funny | reactionCount }}
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex sm:flex-column align-items-center gap-3 sm:gap-2 w-6 md:w-2 justify-content-center align-self-center"
+            >
+              <i
+                *ngIf="review.isRecommended"
+                class="pi pi-thumbs-up"
+                style="color: green; font-size: 2rem"
+              ></i>
+              <i
+                *ngIf="!review.isRecommended"
+                class="pi pi-thumbs-down"
+                style="color: darkred; font-size: 2rem"
+              ></i>
+            </div>
+          </div>
+          <!-- </div> -->
+        </div>
+      </div>
+      <div
+        class="text-2xl font-bold text-900 flex align-items-center m-auto w-full justify-content-center p-8"
+        *ngIf="reviews.length == 0"
+      >
+        No Reviews
+      </div>
+      <p-paginator
+        (onPageChange)="onPageChange($event)"
+        [first]="0"
+        [rows]="queryParams.pagination.pageSize"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="[10, 20, 30]"
+      ></p-paginator>
+    </div>
+  </div>
+</div>

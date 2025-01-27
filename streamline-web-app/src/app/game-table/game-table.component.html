@@ -1,0 +1,166 @@
+<div class="card">
+  <div class="flex gap-3">
+    <div class="tableOuter w-full">
+      <div
+        class="tableHeader flex flex-column md:flex-row md:justify-content-between"
+      >
+        <p-dropdown
+          [options]="sortOptions"
+          [(ngModel)]="sortKey"
+          placeholder="Sort By Review Count"
+          (onChange)="onSortChange($event)"
+          styleClass="mb-2 md:mb-0"
+        ></p-dropdown>
+        <span class="p-input-icon-left w-9 sm:w-16rem xl:w-20rem">
+          <i class="pi pi-search"></i>
+          <input
+            type="search"
+            pInputText
+            placeholder="Search by name or developer"
+            [(ngModel)]="queryParams.search"
+            class="w-full"
+            (keydown.enter)="onFilterChange()"
+          />
+        </span>
+      </div>
+      <div class="grid grid-nogutter tableContent">
+        <div class="col-12" *ngFor="let game of games; let first = first">
+          <div
+            class="flex flex-column xl:flex-row p-4 gap-4"
+            [ngClass]="{ 'border-top-1 surface-border': !first }"
+          >
+            <img
+              class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block m-auto border-round"
+              [src]="game.header_image"
+              [alt]="game.title"
+            />
+            <div
+              class="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4"
+            >
+              <div
+                class="flex flex-column align-items-center sm:align-items-start gap-3"
+              >
+                <div class="flex align-items-center gap-3">
+                  <div class="text-2xl font-bold text-900">
+                    {{ game.title }}
+                  </div>
+                  <fa-icon
+                    *ngIf="game.platforms.windows"
+                    [icon]="faWindows"
+                    size="lg"
+                  ></fa-icon>
+                  <fa-icon
+                    *ngIf="game.platforms.mac"
+                    [icon]="faApple"
+                    size="lg"
+                  ></fa-icon>
+                  <fa-icon
+                    *ngIf="game.platforms.linux"
+                    [icon]="faLinux"
+                    size="lg"
+                  ></fa-icon>
+                </div>
+                <div class="flex align-items-center gap-2 flex-wrap">
+                  <span *ngFor="let genre of game.genres" class="genreChip">{{
+                    genre
+                  }}</span>
+                </div>
+                <div class="flex align-items-center gap-3">
+                  <div>
+                    {{ game.release_date }}
+                  </div>
+                  <p-tag
+                    [value]="game.sentiment"
+                    [severity]="getSeverity(game)"
+                    [styleClass]="getSeverity(game)"
+                  ></p-tag>
+                </div>
+              </div>
+              <div
+                class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2 cart"
+              >
+                <span class="text-2xl font-semibold">{{
+                  game.price | price
+                }}</span>
+                <button
+                  pButton
+                  icon="pi pi-shopping-cart"
+                  class="md:align-self-end mb-2 p-button-rounded"
+                  [routerLink]="['/games', game._id]"
+                ></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="text-2xl font-bold text-900 flex align-items-center m-auto w-full justify-content-center p-8"
+        *ngIf="games.length == 0"
+      >
+        No Games Match The Filters
+      </div>
+      <p-paginator
+        (onPageChange)="onPageChange($event)"
+        [first]="0"
+        [rows]="queryParams.pagination.pageSize"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="[10, 20, 30]"
+      ></p-paginator>
+    </div>
+    <div class="flex flex-column gap-3 tableFilters">
+      <p-multiSelect
+        [options]="genresFilterOptions"
+        (onChange)="onFilterChange()"
+        [(ngModel)]="queryParams.genre"
+        placeholder="Filter By Genre"
+        class="w-full max-w-17rem w-17rem"
+      ></p-multiSelect>
+      <p-multiSelect
+        [options]="platformsFilterOptions"
+        (onChange)="onFilterChange()"
+        [(ngModel)]="queryParams.platform"
+        placeholder="Filter By Platform"
+        class="w-full max-w-17rem w-17rem"
+      ></p-multiSelect>
+      <p-multiSelect
+        [options]="tagsFilterOptions"
+        (onChange)="onFilterChange()"
+        [(ngModel)]="queryParams.tags"
+        placeholder="Filter By Tag"
+        [virtualScroll]="true"
+        [virtualScrollItemSize]="46"
+        class="multiselect-custom-virtual-scroll w-full max-w-17rem w-17rem"
+      ></p-multiSelect>
+      <div class="w-full priceSlider">
+        <div class="priceLabel mb-2">
+          {{ priceSliderValue | priceFilter }}
+        </div>
+        <p-slider
+          [(ngModel)]="priceSliderValue"
+          [max]="70"
+          [min]="0"
+          [step]="5"
+          class="w-full"
+          (onSlideEnd)="onPriceFilterChange($event)"
+        ></p-slider>
+      </div>
+      <div class="flex-auto">
+        <label for="yearpicker" class="font-bold block mb-2">
+          Release Year
+        </label>
+        <p-calendar
+          [(ngModel)]="queryParams.release_date"
+          view="year"
+          dateFormat="yy"
+          inputId="yearpicker"
+          [showIcon]="true"
+          class="w-full"
+          [showButtonBar]="true"
+          (onSelect)="onDateSelectChange($event)"
+          (onClearClick)="onDateSelectChange($event)"
+        ></p-calendar>
+      </div>
+      <span class="w-full m-auto records">{{ totalRecords }} Results</span>
+    </div>
+  </div>
+</div>

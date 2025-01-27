@@ -1,0 +1,101 @@
+.card {
+  background: var(--surface-card);
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.tableHeader {
+  background: #f9fafb;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 700;
+}
+
+.tableOuter {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: auto;
+}
+
+.tableFilters {
+  background: #f9fafb;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  padding: 1rem 1rem;
+  font-weight: 700;
+  height: fit-content;
+  border-radius: 0.5rem;
+}
+
+.priceLabel {
+  font-family: var(--font-family);
+  font-feature-settings: var(--font-feature-settings, normal);
+  font-size: 1rem;
+  font-weight: normal;
+  display: block;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #6b7280;
+}
+
+.tableContent {
+  background: #ffffff;
+  color: #4b5563;
+  border: 0 none;
+  padding: 0;
+}
+
+.cart {
+  min-width: 140px;
+}
+
+.records {
+  text-align: end;
+  display: block;
+}
+
+.genreChip {
+  display: inline-block;
+  line-height: 19px;
+  padding: 0 7px;
+  color: #4b5563;
+  background-color: #f9fafb;
+  box-shadow: none;
+  border-radius: 2px;
+  cursor: pointer;
+  border: 1px solid #e5e7eb;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:host ::ng-deep {
+  .p-multiselect {
+    width: 100%;
+  }
+  .over-pos {
+    background-color: #00b300;
+    color: #ffffff;
+  }
+
+  .very-pos {
+    background-color: #5b9c08;
+    color: #ffffff;
+  }
+
+  .most-pos {
+    background-color: #88900c;
+    color: #ffffff;
+  }
+
+  .mixed {
+    background-color: #f97316;
+    color: #ffffff;
+  }
+}
