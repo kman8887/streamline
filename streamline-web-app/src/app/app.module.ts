@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { AuthHttpInterceptor, HttpMethod } from '@auth0/auth0-angular';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -59,6 +63,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ReviewAddEditComponent,
     ReactionCountPipe,
   ],
+  bootstrap: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -74,12 +79,10 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserModule,
     FormsModule,
-    HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     TagModule,
@@ -132,7 +135,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     UserService,
     QueryParamBuilderService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}
