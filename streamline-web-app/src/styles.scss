@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @use "@angular/material" as mat;
-$custom-typography: mat.define-typography-config(
+$custom-typography: mat.m2-define-typography-config(
   $font-family: "Inter var",
 );
 @include mat.typography-hierarchy($custom-typography);
