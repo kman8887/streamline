@@ -21,8 +21,11 @@ export class NavbarComponent implements OnInit {
       shareReplay()
     );
 
+  largeNavBarLogo = '/assets/image2vector (1).svg';
+  smallNavBarLogo = '/assets/image2vector (1).svg';
   loading = true;
   creatingNew = false;
+  isNavExpanded = false;
   user: User | undefined | null;
 
   constructor(
@@ -50,6 +53,10 @@ export class NavbarComponent implements OnInit {
     this.authService.loginWithRedirect({
       appState: { target: this.router.url },
     });
+  }
+
+  setIsNavExpanded(newValue: boolean) {
+    this.isNavExpanded = newValue;
   }
 
   private createUserIfNew() {

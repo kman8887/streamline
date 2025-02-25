@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ReviewReaction } from '../models/reviewReaction.enum';
 import { Observable } from 'rxjs';
-import { Review } from '../models/game';
+import { Review } from '../models/movie';
 import { createEditReview } from '../models/createEditReview';
 
 const apiUrl = 'http://localhost:5000/api/v1.0/';

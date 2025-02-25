@@ -1,0 +1,31 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@mixin color($theme) {
+  .navigation {
+    // background-color: mat.get-theme-color($theme, primary, 40);
+    background-color: var(--sys-surface-container);
+
+    .navBarLink {
+      //   color: mat.get-theme-color($theme, primary, 100);
+      color: var(--mat-sidenav-container-text-color);
+    }
+  }
+}
+
+@mixin typography($theme) {
+  .navigation {
+    // Get the large headline font from the theme.
+    font: mat.get-theme-typography($theme, title-medium, font);
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+
+  @if mat.theme-has($theme, typography) {
+    @include typography($theme);
+  }
+}

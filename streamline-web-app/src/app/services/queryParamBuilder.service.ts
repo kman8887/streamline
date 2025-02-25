@@ -1,10 +1,10 @@
-import { GamesQueryParams, ReviewsQueryParams } from './games.service';
+import { MoviesQueryParams, ReviewsQueryParams } from './movies.service';
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class QueryParamBuilderService {
-  buildGameParams(queryParams: GamesQueryParams) {
+  buildMovieParams(queryParams: MoviesQueryParams) {
     let params = new HttpParams();
 
     if (queryParams.genre) {

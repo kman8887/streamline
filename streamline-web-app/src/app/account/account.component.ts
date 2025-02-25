@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { GamesService, ReviewsQueryParams } from '../services/games.service';
+import { MoviesService, ReviewsQueryParams } from '../services/movies.service';
 import { ActivatedRoute } from '@angular/router';
 import { PaginatorState } from 'primeng/paginator';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
-import { Review } from '../models/game';
+import { Review } from '../models/movie';
 import {
   faFaceLaughBeam,
   faThumbsUp,

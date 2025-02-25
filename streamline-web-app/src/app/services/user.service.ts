@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import { ReviewsResponse } from '../models/reviewsResponse';
 import { QueryParamBuilderService } from './queryParamBuilder.service';
-import { ReviewsQueryParams } from './games.service';
+import { ReviewsQueryParams } from './movies.service';
 import { AuthService } from '@auth0/auth0-angular';
 
 const apiUrl = 'http://localhost:5000/api/v1.0/';

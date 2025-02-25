@@ -1,7 +1,7 @@
-import { Game } from './game';
+import { Movie } from './movie';
 
-export interface GamesResponse {
-  data: Game[];
+export interface MoviesResponse {
+  data: Movie[];
   pageInfo: {
     distinctGenres: string[];
     distinctTags: string[];

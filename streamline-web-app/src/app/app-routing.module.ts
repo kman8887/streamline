@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GameTableComponent } from './game-table/game-table.component';
-import { GameComponent } from './game/game.component';
+import { MovieTableComponent } from './movie-table/movie-table.component';
+import { MovieComponent } from './movie/movie.component';
 import { AccountComponent } from './account/account.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/games',
+    redirectTo: '/movies',
     pathMatch: 'full',
   },
   {
-    path: 'games',
-    component: GameTableComponent,
+    path: 'movies',
+    component: MovieTableComponent,
   },
   {
-    path: 'games/:id',
-    component: GameComponent,
+    path: 'movies/:id',
+    component: MovieComponent,
   },
   {
     path: 'user/:id',

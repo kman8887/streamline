@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Game } from '../models/game';
-import { GamesResponse } from '../models/gamesResponse';
+import { Movie } from '../models/movie';
+import { MoviesResponse } from '../models/moviesResponse';
 import { ReviewsResponse } from '../models/reviewsResponse';
 import { QueryParamBuilderService } from './queryParamBuilder.service';
 
 const apiUrl = 'http://localhost:5000/api/v1.0/';
 
-export interface GamesQueryParams {
+export interface MoviesQueryParams {
   price?: number;
   genre?: string[];
   release_date?: Date;
@@ -31,19 +31,19 @@ export interface Pagination {
 }
 
 @Injectable({ providedIn: 'root' })
-export class GamesService {
+export class MoviesService {
   constructor(
     private httpClient: HttpClient,
     private queryParamBuilder: QueryParamBuilderService
   ) {}
 
-  findGame(id: string): Observable<Game> {
-    return this.httpClient.get<Game>(apiUrl + 'games/' + id);
+  findMovie(id: string): Observable<Movie> {
+    return this.httpClient.get<Movie>(apiUrl + 'movies/' + id);
   }
 
-  findGames(queryParams: GamesQueryParams): Observable<GamesResponse> {
-    return this.httpClient.get<GamesResponse>(apiUrl + 'games', {
-      params: this.queryParamBuilder.buildGameParams(queryParams),
+  findMovies(queryParams: MoviesQueryParams): Observable<MoviesResponse> {
+    return this.httpClient.get<MoviesResponse>(apiUrl + 'movies', {
+      params: this.queryParamBuilder.buildMovieParams(queryParams),
     });
   }
 
@@ -52,7 +52,7 @@ export class GamesService {
     queryParams: ReviewsQueryParams
   ): Observable<ReviewsResponse> {
     return this.httpClient.get<ReviewsResponse>(
-      apiUrl + 'games/' + id + '/reviews',
+      apiUrl + 'movies/' + id + '/reviews',
       {
         params: this.queryParamBuilder.buildReviewParams(queryParams),
       }

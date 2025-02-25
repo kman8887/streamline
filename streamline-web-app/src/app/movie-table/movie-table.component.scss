@@ -1,29 +1,21 @@
 .card {
-  background: var(--surface-card);
   padding: 2rem;
   border-radius: 10px;
   margin-bottom: 1rem;
 }
 
 .tableHeader {
-  background: #f9fafb;
-  color: #374151;
-  border: 1px solid #e5e7eb;
   border-width: 0 0 1px 0;
   padding: 1rem 1rem;
   font-weight: 700;
 }
 
 .tableOuter {
-  border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   overflow: auto;
 }
 
 .tableFilters {
-  background: #f9fafb;
-  color: #374151;
-  border: 1px solid #e5e7eb;
   padding: 1rem 1rem;
   font-weight: 700;
   height: fit-content;
@@ -31,8 +23,6 @@
 }
 
 .priceLabel {
-  font-family: var(--font-family);
-  font-feature-settings: var(--font-feature-settings, normal);
   font-size: 1rem;
   font-weight: normal;
   display: block;
@@ -40,12 +30,9 @@
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #6b7280;
 }
 
 .tableContent {
-  background: #ffffff;
-  color: #4b5563;
   border: 0 none;
   padding: 0;
 }
@@ -62,12 +49,9 @@
   display: inline-block;
   line-height: 19px;
   padding: 0 7px;
-  color: #4b5563;
-  background-color: #f9fafb;
   box-shadow: none;
   border-radius: 2px;
   cursor: pointer;
-  border: 1px solid #e5e7eb;
   max-width: 200px;
   white-space: nowrap;
   overflow: hidden;

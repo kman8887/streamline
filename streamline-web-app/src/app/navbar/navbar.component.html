@@ -1,69 +1,98 @@
 <ng-container *ngIf="!loading; else spinner">
-  <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav
-      #drawer
-      class="sidenav"
-      fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false"
-    >
-      <mat-toolbar>Menu</mat-toolbar>
-      <mat-nav-list>
-        <a mat-list-item [routerLink]="['/games']">Games</a>
-        <ng-container
-          *ngIf="authService.isAuthenticated$ | async; else loggedOut"
-        >
-          <mat-divider></mat-divider>
-          <a *ngIf="user" mat-list-item [routerLink]="['/user', user['_id']]"
-            >Account</a
-          >
-          <mat-list-item>
-            <button
-              class="authButton"
-              mat-flat-button
-              color="primary"
-              (click)="authService.logout()"
-            >
-              Logout
-            </button>
-          </mat-list-item>
-        </ng-container>
-        <ng-template #loggedOut>
-          <mat-divider></mat-divider>
-          <mat-list-item>
-            <button
-              class="authButton"
-              mat-flat-button
-              color="primary"
-              (click)="login()"
-            >
-              Login
-            </button>
-          </mat-list-item>
-        </ng-template>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <mat-toolbar class="navBar" color="primary">
-        @if (isHandset$ | async) {
-        <button
-          type="button"
-          aria-label="Toggle sidenav"
-          mat-icon-button
-          (click)="drawer.toggle()"
-        >
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-        </button>
-        }
+  <nav
+    id="topNavBarContainer"
+    [class]="isNavExpanded ? 'navigation expanded' : 'navigation'"
+  >
+    <div class="brandLogoDiv">
+      <a aria-label="Link to the home page" href="/">
         <img
-          src="/assets/gameglance-high-resolution-logo-white-transparent.svg"
-          class="navImage"
+          class="largeBrandLogo"
+          [src]="largeNavBarLogo"
+          alt="Steamline logo"
         />
-      </mat-toolbar>
-      <ng-content></ng-content>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+        <img
+          class="smallBrandLogo"
+          [src]="smallNavBarLogo"
+          alt="Steamline logo"
+        />
+      </a>
+    </div>
+    <div class="navigationMenu">
+      <ul>
+        <li>
+          <a
+            mat-menu-item
+            id="moviesButton"
+            class="navBarLink"
+            href="/marketplace?type=buy"
+          >
+            Movies
+          </a>
+        </li>
+        <li>
+          <a mat-menu-item class="navBarLink" href="/marketplace?type=rent">
+            My Lists
+          </a>
+        </li>
+        <li>
+          <a mat-menu-item class="navBarLink" href="/aboutUs"> About </a>
+        </li>
+      </ul>
+    </div>
+    <ng-container *ngIf="authService.isAuthenticated$ | async; else loggedOut">
+      <button
+        class="accountButton"
+        mat-icon-button
+        [matMenuTriggerFor]="accountMenu"
+        aria-label="User's Account Button"
+      >
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #accountMenu="matMenu">
+        <a *ngIf="user" mat-menu-item [routerLink]="['/user', user['_id']]">
+          <mat-icon>person</mat-icon>
+          <span>My Account</span>
+        </a>
+        <button mat-menu-item>
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+        </button>
+        <div class="authButtonContainer">
+          <button
+            class="authButton"
+            mat-flat-button
+            (click)="authService.logout()"
+          >
+            Logout
+          </button>
+        </div>
+      </mat-menu>
+    </ng-container>
+    <ng-template #loggedOut>
+      <button class="authButton" mat-flat-button (click)="login()">
+        Login / Sign Up
+      </button>
+    </ng-template>
+    <button
+      class="hamburger"
+      aria-label="Hamburger button"
+      (click)="setIsNavExpanded(!isNavExpanded)"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        viewBox="0 0 20 20"
+        fill="white"
+      >
+        <path
+          fillRule="evenodd"
+          d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </button>
+  </nav>
+  <ng-content></ng-content>
 </ng-container>
 <ng-template class="flex justify-content-center" #spinner>
   <p-progressSpinner></p-progressSpinner>

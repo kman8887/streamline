@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Game, Review } from '../models/game';
-import { GamesService, ReviewsQueryParams } from '../services/games.service';
+import { Movie, Review } from '../models/movie';
+import { MoviesService, ReviewsQueryParams } from '../services/movies.service';
 import { ActivatedRoute } from '@angular/router';
 import { PaginatorState } from 'primeng/paginator';
 import {
@@ -21,12 +21,12 @@ import { editReview } from '../reviews/review-add-edit/review-add-edit.component
 import * as _ from 'lodash';
 
 @Component({
-  selector: 'app-game',
-  templateUrl: './game.component.html',
-  styleUrl: './game.component.scss',
+  selector: 'app-movie',
+  templateUrl: './movie.component.html',
+  styleUrl: './movie.component.scss',
 })
-export class GameComponent {
-  game: Game | undefined;
+export class MovieComponent {
+  movie: Movie | undefined;
   reviews: Review[] = [];
   ReviewReaction = ReviewReaction;
 
@@ -67,29 +67,29 @@ export class GameComponent {
   };
 
   constructor(
-    private gamesService: GamesService,
+    private moviesService: MoviesService,
     private route: ActivatedRoute,
     private authService: AuthService,
     private reviewService: ReviewService
   ) {}
 
   ngOnInit(): void {
-    this.getGames();
+    this.getMovies();
     this.getReviews();
     this.getUser();
   }
 
-  getGames(): void {
-    this.gamesService
-      .findGame(this.route.snapshot.params['id'])
+  getMovies(): void {
+    this.moviesService
+      .findMovie(this.route.snapshot.params['id'])
       .subscribe((response) => {
-        this.game = response;
-        console.log(this.game);
+        this.movie = response;
+        console.log(this.movie);
       });
   }
 
   getReviews(): void {
-    this.gamesService
+    this.moviesService
       .getReviews(this.route.snapshot.params['id'], this.queryParams)
       .subscribe((response) => {
         this.reviews = response.data;
@@ -129,24 +129,24 @@ export class GameComponent {
     this.getReviews();
   }
 
-  getSeverity(game: Game): string | undefined {
-    switch (game.sentiment) {
-      case 'Overwhelmingly Positive':
-        return 'over-pos';
+  // getSeverity(movie: Movie): string | undefined {
+  //   switch (movie.sentiment) {
+  //     case 'Overwhelmingly Positive':
+  //       return 'over-pos';
 
-      case 'Very Positive':
-        return 'very-pos';
+  //     case 'Very Positive':
+  //       return 'very-pos';
 
-      case 'Mostly Positive':
-        return 'most-pos';
+  //     case 'Mostly Positive':
+  //       return 'most-pos';
 
-      case 'Mixed':
-        return 'mixed';
+  //     case 'Mixed':
+  //       return 'mixed';
 
-      default:
-        return undefined;
-    }
-  }
+  //     default:
+  //       return undefined;
+  //   }
+  // }
 
   getAvatar(avatarUrl: string): string {
     return avatarUrl.replace('.jpg', '_full.jpg');
@@ -286,6 +286,11 @@ export class GameComponent {
     return (
       review.user_id === this.loggedInUserId || this.roles.includes('Admin')
     );
+  }
+
+  getMoviePosterUrl(poster_url: string) {
+    const baseUrl: string = 'https://image.tmdb.org/t/p/w780';
+    return baseUrl + poster_url;
   }
 
   deleteReview(id: string) {

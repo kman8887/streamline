@@ -7,7 +7,6 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { AuthHttpInterceptor, HttpMethod } from '@auth0/auth0-angular';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,24 +19,24 @@ import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
-import { GameTableComponent } from './game-table/game-table.component';
+import { MovieTableComponent } from './movie-table/movie-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { GamesService } from './services/games.service';
+import { MoviesService } from './services/movies.service';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { PricePipe } from './game-table/price.pipe';
+import { PricePipe } from './movie-table/price.pipe';
 import { InputTextModule } from 'primeng/inputtext';
 import { SliderModule } from 'primeng/slider';
 import { CalendarModule } from 'primeng/calendar';
-import { PriceFilterPipe } from './game-table/price-filter.pipe';
+import { PriceFilterPipe } from './movie-table/price-filter.pipe';
 import { ChipModule } from 'primeng/chip';
 import { StyleClassModule } from 'primeng/styleclass';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { GameComponent } from './game/game.component';
+import { MovieComponent } from './movie/movie.component';
 import { AuthModule } from '@auth0/auth0-angular';
 import { MatDividerModule } from '@angular/material/divider';
 import { AccountComponent } from './account/account.component';
@@ -48,17 +47,17 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { ReactionCountPipe } from './game/reaction-count.pipe';
+import { ReactionCountPipe } from './movie/reaction-count.pipe';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    GameTableComponent,
+    MovieTableComponent,
     PricePipe,
     PriceFilterPipe,
-    GameComponent,
+    MovieComponent,
     AccountComponent,
     ReviewAddEditComponent,
     ReactionCountPipe,
@@ -131,7 +130,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     }),
   ],
   providers: [
-    GamesService,
+    MoviesService,
     UserService,
     QueryParamBuilderService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
