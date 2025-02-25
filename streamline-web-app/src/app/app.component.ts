@@ -22,10 +22,10 @@ export class AppComponent {
       'app-theme'
     ) as HTMLLinkElement;
     if (linkElement.href.includes('light')) {
-      linkElement.href = 'theme-dark.css';
+      linkElement.href = 'dark-theme.css';
       this.isDarkMode = true;
     } else {
-      linkElement.href = 'theme-light.css';
+      linkElement.href = 'light-theme.css';
       this.isDarkMode = false;
     }
   }

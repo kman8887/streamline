@@ -33,12 +33,20 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/styles.scss",
-              "node_modules/primeng/resources/themes/aura-light-lime/theme.css",
-              "node_modules/primeng/resources/themes/aura-dark-lime/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeflex/primeflex.min.css",
               "node_modules/primeicons/primeicons.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              {
+                "input": "src/dark-theme.css",
+                "bundleName": "dark-theme",
+                "inject": false
+              },
+              {
+                "input": "src/light-theme.css",
+                "bundleName": "light-theme",
+                "inject": false
+              }
             ],
             "scripts": []
           },
