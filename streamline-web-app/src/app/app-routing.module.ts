@@ -3,12 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { MovieTableComponent } from './movie-table/movie-table.component';
 import { MovieComponent } from './movie/movie.component';
 import { AccountComponent } from './account/account.component';
+import { HomepageComponent } from './homepage/homepage.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/movies',
-    pathMatch: 'full',
+    component: HomepageComponent,
   },
   {
     path: 'movies',

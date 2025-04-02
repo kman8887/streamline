@@ -4,8 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export interface editReview {
   text: string;
-  hours: number;
-  isRecommended: boolean;
+  rating: number;
 }
 
 @Component({
@@ -31,8 +30,7 @@ export class ReviewAddEditComponent implements OnInit {
 
   createNewForm() {
     this.form = this.formBuilder.group({
-      isRecommended: [false, Validators.required],
-      hours: [0, Validators.required],
+      rating: [0, Validators.required],
       text: ['', Validators.required],
     });
 
@@ -55,7 +53,7 @@ export class ReviewAddEditComponent implements OnInit {
   }
 
   close() {
-    this.form.reset({ isRecommended: false, hours: 0, text: '' });
+    this.form.reset({ rating: 0, text: '' });
 
     if (this.formData) {
       this.form.patchValue(this.formData);

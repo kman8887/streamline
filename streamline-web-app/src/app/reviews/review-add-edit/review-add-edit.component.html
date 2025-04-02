@@ -16,23 +16,9 @@
         (ngSubmit)="submit(form)"
         [formGroup]="form"
       >
-        <div class="flex flex-column gap-1">
-          <span>Do you recommend this game?</span>
-          <p-inputSwitch
-            inputId="recomended"
-            formControlName="isRecommended"
-          ></p-inputSwitch>
-        </div>
         <div class="flex-auto">
-          <label for="minmaxfraction">Hours Played</label>
-          <p-inputNumber
-            formControlName="hours"
-            inputId="minmaxfraction"
-            mode="decimal"
-            [minFractionDigits]="2"
-            [maxFractionDigits]="5"
-          >
-          </p-inputNumber>
+          <label for="star-rating">Rating</label>
+          <p-rating id="star-rating" formControlName="rating" />
         </div>
         <span class="p-float-label">
           <textarea

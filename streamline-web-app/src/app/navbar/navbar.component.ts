@@ -42,6 +42,7 @@ export class NavbarComponent implements OnInit {
 
     this.authService.user$.subscribe((response: any) => {
       this.user = response;
+      console.log(this.user);
       if (this.creatingNew) {
         return;
       }

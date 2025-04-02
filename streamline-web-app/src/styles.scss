@@ -4,39 +4,27 @@
 @use "./app/styles/m3-theme.scss";
 @use "./app/navbar/navbar.component-theme" as navbar;
 @use "./app/movie-table/movie-table.component-theme" as movie-table;
+@use "./app/movie/movie.component-theme" as movie;
 @include mat.core();
 
-$custom-typography: mat.m2-define-typography-config(
-  $font-family: "Lexend",
-);
-@include mat.typography-hierarchy($custom-typography);
+// $custom-typography: mat.m2-define-typography-config(
+//   $font-family: "Lexend",
+// );
 
-$new-dark-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: dark,
-      primary: mat.$violet-palette,
-    ),
-  )
-);
+// @include mat.typography-hierarchy($custom-typography);
 
-// Define a light theme
-$new-light-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: light,
-      primary: mat.$violet-palette,
-    ),
-  )
-);
+// @include mat.typography-hierarchy(m3-theme.$dark-theme);
 
 :root {
+  @include mat.typography-hierarchy(m3-theme.$dark-theme);
   @include mat.toolbar-theme(m3-theme.$dark-theme);
   @include mat.all-component-themes(m3-theme.$dark-theme);
   @include mat.system-level-colors(m3-theme.$dark-theme);
   @include mat.system-level-typography(m3-theme.$dark-theme);
   @include navbar.theme(m3-theme.$dark-theme);
   @include movie-table.theme(m3-theme.$dark-theme);
+  @include movie.theme(m3-theme.$dark-theme);
+  @include mat.color-variants-backwards-compatibility(m3-theme.$dark-theme);
 
   @media (prefers-color-scheme: light) {
     // Use the `-color` mixins to only apply color styles without reapplying the same
@@ -47,8 +35,14 @@ $new-light-theme: mat.define-theme(
     @include mat.system-level-typography(m3-theme.$light-theme);
     @include navbar.color(m3-theme.$light-theme);
     @include movie-table.color(m3-theme.$light-theme);
+    @include movie.color(m3-theme.$light-theme);
+    @include mat.color-variants-backwards-compatibility(m3-theme.$light-theme);
   }
 }
+
+@import "light-theme.scss" screen;
+/* Supersede dark mode when applicable */
+@import "dark-theme.scss" screen and (prefers-color-scheme: dark);
 
 html,
 body {
@@ -58,6 +52,21 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   background-color: var(--mat-app-background-color);
+
+  .spinner-div {
+    height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.p-paginator .p-dropdown .p-dropdown-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 // @include mat.color-variants-backwards-compatibility($theme);

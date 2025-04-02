@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Movie, Review } from '../models/movie';
+import { Movie, Review, UserInteraction, WatchProvider } from '../models/movie';
 import { MoviesService, ReviewsQueryParams } from '../services/movies.service';
 import { ActivatedRoute } from '@angular/router';
 import { PaginatorState } from 'primeng/paginator';
@@ -19,6 +19,13 @@ import { ReviewService } from '../services/review.service';
 import { createEditReview } from '../models/createEditReview';
 import { editReview } from '../reviews/review-add-edit/review-add-edit.component';
 import * as _ from 'lodash';
+import { InteractionType } from '../models/interactionType.enum';
+import { WatchProviderType } from '../models/watchProviderType.enum';
+import { UserService } from '../services/user.service';
+import { MovieRating } from '../ratings/ratings-onboarding/ratings-onboarding.component';
+import { ReviewTableData } from '../reviews/review-table/review-table.component';
+import { ReviewsResponse } from '../models/reviewsResponse';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-movie',
@@ -27,276 +34,241 @@ import * as _ from 'lodash';
 })
 export class MovieComponent {
   movie: Movie | undefined;
-  reviews: Review[] = [];
-  ReviewReaction = ReviewReaction;
+  reviewTableData?: ReviewTableData;
 
-  faWindows = faWindows;
-  faApple = faApple;
-  faLinux = faLinux;
+  isMovieLiked = false;
+  isMovieWatched = false;
 
-  faFaceLaughBeam = faFaceLaughBeam;
-  faThumbsUp = faThumbsUp;
-  faThumbsDown = faThumbsDown;
+  recommendationScore: number = 0;
+  rating: number = 0;
+  watchProviders: WatchProvidersByType | undefined;
 
-  sortOptions = [
-    { label: 'Newest', value: 'date:-1' },
-    { label: 'Funniest', value: 'funnyCount:-1' },
-    { label: 'Most Helpful', value: 'helpfulCount:-1' },
-    { label: 'Most Unhelpful', value: 'notHelpfulCount:-1' },
-    { label: 'Playtime', value: 'hours:-1' },
-    { label: 'Users Games', value: 'products:-1' },
-  ];
-
-  reviewTypeFilterOptions = [
-    { label: 'Recommended', value: true },
-    { label: 'Not Recommended', value: false },
-  ];
-
-  sortKey: string = '';
-
-  loggedInUserId: string = '';
-  roles: string[] = [];
-
-  totalRecords = 0;
-
-  queryParams: ReviewsQueryParams = {
-    pagination: {
-      pageNumber: 0,
-      pageSize: 10,
-    },
-  };
+  private loggedInUserId: string = '';
+  private roles: string[] = [];
 
   constructor(
     private moviesService: MoviesService,
+    private userService: UserService,
     private route: ActivatedRoute,
-    private authService: AuthService,
-    private reviewService: ReviewService
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.getMovies();
-    this.getReviews();
     this.getUser();
   }
 
   getMovies(): void {
-    this.moviesService
-      .findMovie(this.route.snapshot.params['id'])
-      .subscribe((response) => {
-        this.movie = response;
-        console.log(this.movie);
-      });
-  }
-
-  getReviews(): void {
-    this.moviesService
-      .getReviews(this.route.snapshot.params['id'], this.queryParams)
-      .subscribe((response) => {
-        this.reviews = response.data;
-        this.totalRecords = response.totalRecords;
-      });
+    this.moviesService.findMovie(this.movieId).subscribe((response) => {
+      this.movie = response;
+      console.log(this.movie);
+      this.getMovieRating();
+      this.setIsMovieLiked();
+      this.setIsMovieWatched();
+      this.watchProviders = this.getWatchProvidersByType();
+      console.log(this.watchProviders);
+    });
   }
 
   getUser(): void {
+    const movie_id = this.movieId;
     this.authService.user$.subscribe((response: any) => {
       if (response) {
         this.loggedInUserId = response._id;
         this.roles = response.myroles;
+
+        this.moviesService
+          .getRecommendation(this.loggedInUserId, movie_id)
+          .subscribe((response) => {
+            this.recommendationScore = response.predicted_score;
+          });
       }
+
+      this.setReviewTableData();
     });
   }
 
-  onSortChange(event: any) {
-    let value = event.value;
-    console.log('sort change');
-
-    if (value.indexOf(':') > 0) {
-      this.queryParams.sort = value;
-    } else {
-      this.queryParams.sort = value;
-    }
-
-    this.getReviews();
-  }
-
-  onFilterChange(event: any) {
-    console.log(event);
-    console.log('filter change');
-    console.log(this.queryParams.isRecommended);
-    if (event.value.length > 0) {
-      this.queryParams.isRecommended = [event.itemValue['value']];
-    }
-    this.getReviews();
-  }
-
-  // getSeverity(movie: Movie): string | undefined {
-  //   switch (movie.sentiment) {
-  //     case 'Overwhelmingly Positive':
-  //       return 'over-pos';
-
-  //     case 'Very Positive':
-  //       return 'very-pos';
-
-  //     case 'Mostly Positive':
-  //       return 'most-pos';
-
-  //     case 'Mixed':
-  //       return 'mixed';
-
-  //     default:
-  //       return undefined;
-  //   }
-  // }
-
-  getAvatar(avatarUrl: string): string {
-    return avatarUrl.replace('.jpg', '_full.jpg');
-  }
-
-  onPageChange(event: PaginatorState) {
-    console.log('page change');
-    console.log(event);
-    this.queryParams.pagination.pageNumber = event.page ? event.page : 0;
-    this.queryParams.pagination.pageSize = event.rows ? event.rows : 10;
-    this.getReviews();
-  }
-
-  toggleState(review: Review, reaction: ReviewReaction): void {
-    this.reviewService.toggleReaction(review._id, reaction).subscribe(
-      () => {
-        this.toggleReaction(review, reaction, this.reaction(review, reaction));
-      },
-      (error) => {
-        console.error('Error toggling like status:', error);
-      }
-    );
-  }
-
-  toggleReaction(
-    review: Review,
-    reaction: ReviewReaction,
-    present: boolean
-  ): void {
-    console.log(review);
-    switch (reaction) {
-      case ReviewReaction.Helpful: {
-        if (!review.found_helpful) {
-          review.found_helpful = [];
-        }
-        present
-          ? (review.found_helpful = review.found_helpful.filter(
-              (id) => id !== this.loggedInUserId
-            ))
-          : review.found_helpful.push(this.loggedInUserId);
-        review.found_helpful = [...review.found_helpful];
-        review.found_funny = review.found_funny.filter(
-          (id) => id !== this.loggedInUserId
-        );
-        review.found_not_helpful = review.found_not_helpful.filter(
-          (id) => id !== this.loggedInUserId
-        );
-        break;
-      }
-      case ReviewReaction.NotHelpful: {
-        if (!review.found_not_helpful) {
-          review.found_not_helpful = [];
-        }
-        present
-          ? (review.found_not_helpful = review.found_not_helpful.filter(
-              (id) => id !== this.loggedInUserId
-            ))
-          : review.found_not_helpful.push(this.loggedInUserId);
-        review.found_not_helpful = [...review.found_not_helpful];
-        review.found_funny = review.found_funny.filter(
-          (id) => id !== this.loggedInUserId
-        );
-        review.found_helpful = review.found_helpful.filter(
-          (id) => id !== this.loggedInUserId
-        );
-        break;
-      }
-      case ReviewReaction.Funny: {
-        if (!review.found_funny) {
-          review.found_funny = [];
-        }
-        present
-          ? (review.found_funny = review.found_funny.filter(
-              (id) => id !== this.loggedInUserId
-            ))
-          : review.found_funny.push(this.loggedInUserId);
-        review.found_funny = [...review.found_funny];
-        review.found_helpful = review.found_helpful.filter(
-          (id) => id !== this.loggedInUserId
-        );
-        review.found_not_helpful = review.found_not_helpful.filter(
-          (id) => id !== this.loggedInUserId
-        );
-        break;
-      }
+  onRatingChange(event: any) {
+    if (this.loggedInUserId !== null && this.movie != undefined) {
+      const movieRating: MovieRating = {
+        id: this.movie.id,
+        title: this.movie.title,
+        release_date: this.movie.release_date,
+        poster_path: this.movie.backdrop_path,
+        rating: this.rating,
+      };
+      this.userService
+        .bulkRateMovies([movieRating], Number.parseInt(this.loggedInUserId))
+        .subscribe({
+          next: (response) => {
+            console.log('Bulk rate movies successful:', response);
+            // Handle success, e.g., show a success message or update the UI
+          },
+          error: (error) => {
+            console.error('Error bulk rating movies:', error);
+            // Handle error, e.g., show an error message
+          },
+          complete: () => {
+            console.log('Bulk rate movies request completed.');
+            // Optional: Handle any cleanup or final steps
+          },
+        });
     }
   }
 
-  reaction(review: Review, reaction: ReviewReaction): boolean {
-    switch (reaction) {
-      case ReviewReaction.Helpful: {
-        return (
-          review.found_helpful &&
-          review.found_helpful.includes(this.loggedInUserId)
-        );
-      }
-      case ReviewReaction.NotHelpful: {
-        return (
-          review.found_not_helpful &&
-          review.found_not_helpful.includes(this.loggedInUserId)
-        );
-      }
-      case ReviewReaction.Funny: {
-        return (
-          review.found_funny && review.found_funny.includes(this.loggedInUserId)
-        );
-      }
+  onMovieLikeToggle(newState: boolean): void {
+    this.isMovieLiked = newState;
+    if (this.movie) {
+      this.moviesService.toggleMovieLike(this.movie.id, newState).subscribe({
+        next: () => {
+          console.log(`Movie ${this.isMovieLiked ? 'liked' : 'unliked'}`);
+        },
+        error: (err) => {
+          console.error('Error toggling like:', err);
+          this.isMovieLiked = !this.isMovieLiked; // Revert UI state on failure
+        },
+      });
     }
   }
 
-  addReview(event: any) {
-    this.reviewService.createReview(event).subscribe((response) => {
-      if (response) {
-        this.getReviews();
-      }
-    });
+  onMovieWatchToggle(newState: boolean): void {
+    this.isMovieWatched = newState;
+    if (this.movie) {
+      this.moviesService.toggleMovieWatched(this.movie.id, newState).subscribe({
+        next: () => {
+          console.log(`Movie ${this.isMovieWatched ? 'watched' : 'unwatched'}`);
+        },
+        error: (err) => {
+          console.error('Error toggling watch:', err);
+          this.isMovieWatched = !this.isMovieWatched; // Revert UI state on failure
+        },
+      });
+    }
   }
 
-  updateReview(event: any) {
-    console.log('update ' + event);
-    this.reviewService.updateReview(event).subscribe((response) => {
-      if (response) {
-        this.getReviews();
-      }
-    });
-  }
-
-  getEditReviewData(review: Review): editReview {
-    return {
-      hours: review.hours,
-      text: review.text,
-      isRecommended: review.isRecommended,
-    };
-  }
-
-  canEditAndDeleteReview(review: Review): boolean {
-    return (
-      review.user_id === this.loggedInUserId || this.roles.includes('Admin')
-    );
-  }
-
-  getMoviePosterUrl(poster_url: string) {
-    const baseUrl: string = 'https://image.tmdb.org/t/p/w780';
+  getMovieBackdropUrl(poster_url: string) {
+    const baseUrl: string = 'https://image.tmdb.org/t/p/original';
     return baseUrl + poster_url;
   }
 
-  deleteReview(id: string) {
-    this.reviewService.deleteReview(id).subscribe((response) => {
-      console.log(response);
-      this.getReviews();
-    });
+  getLogoUrl(logo_url: string) {
+    const baseUrl: string = 'https://image.tmdb.org/t/p/w154';
+    return baseUrl + logo_url;
   }
+
+  getFreeWatchProviders(): WatchProvider[] {
+    return this.getProvidersByType(WatchProviderType.FREE);
+  }
+
+  getWatchProvidersByType(): WatchProvidersByType {
+    return {
+      free: this.getProvidersByType(WatchProviderType.FREE),
+      ads: this.getProvidersByType(WatchProviderType.ADS),
+      rent: this.getProvidersByType(WatchProviderType.RENT),
+      buy: this.getProvidersByType(WatchProviderType.BUY),
+      stream: this.getProvidersByType(WatchProviderType.FLATRATE),
+    };
+  }
+
+  getProvidersByType(type: WatchProviderType): WatchProvider[] {
+    if (this.movie) {
+      return this.movie.watch_providers
+        .filter((wp) => wp.type === type)
+        .sort((wp) => wp.priority);
+    }
+    return [];
+  }
+
+  getVoteAveragePercentage(voteAverage: number): string {
+    return (voteAverage * 10).toFixed() + '%';
+  }
+
+  getRecommendationPercentage(recommendation: number): string {
+    return (recommendation * 100).toFixed() + '%';
+  }
+
+  getRecommendationStyling(recommendation: number): string {
+    return this.getVoteAverageStyling(recommendation * 10);
+  }
+
+  getVoteAverageStyling(voteAverage: number): string {
+    if (voteAverage >= 8.5) {
+      return 'very-highly-rated';
+    } else if (voteAverage >= 7.0) {
+      return 'highly-rated';
+    } else if (voteAverage >= 5.0) {
+      return 'mixed';
+    } else if (voteAverage >= 3.5) {
+      return 'badly-rated';
+    } else {
+      return 'very-badly-rated';
+    }
+  }
+
+  isUserLoggedIn(): boolean {
+    return this.loggedInUserId != '';
+  }
+
+  private get movieId(): string {
+    return this.route.snapshot.params['id'];
+  }
+
+  private setReviewTableData(): void {
+    this.reviewTableData = {
+      movieId: this.movieId,
+      userId: this.loggedInUserId,
+      roles: this.roles,
+      getReviews: this.getReviews.bind(this),
+    };
+  }
+
+  private getReviews(
+    queryParams: ReviewsQueryParams
+  ): Observable<ReviewsResponse> {
+    return this.moviesService.getReviews(this.movieId, queryParams);
+  }
+
+  private getMovieRating(): void {
+    if (this.movie != undefined && this.movie?.user_interactions) {
+      let temp_rating = this.movie?.user_interactions.find(
+        (interaction) => interaction.type === InteractionType.RATING
+      )?.rating;
+
+      if (temp_rating != undefined && temp_rating != null) {
+        this.rating = temp_rating;
+      }
+    }
+  }
+
+  private setIsMovieLiked(): void {
+    console.log(this.movie?.user_interactions);
+    console.log(
+      this.movie?.user_interactions.some(
+        (interaction) => interaction.type === InteractionType.LIKE
+      )
+    );
+    this.isMovieLiked =
+      this.movie != undefined &&
+      this.movie?.user_interactions &&
+      this.movie?.user_interactions.some(
+        (interaction) => interaction.type === InteractionType.LIKE
+      );
+  }
+
+  private setIsMovieWatched(): void {
+    this.isMovieWatched =
+      this.movie != undefined &&
+      this.movie?.user_interactions &&
+      this.movie?.user_interactions.some(
+        (interaction) => interaction.type === InteractionType.WATCHED
+      );
+  }
+}
+
+interface WatchProvidersByType {
+  free: WatchProvider[];
+  ads: WatchProvider[];
+  rent: WatchProvider[];
+  buy: WatchProvider[];
+  stream: WatchProvider[];
 }

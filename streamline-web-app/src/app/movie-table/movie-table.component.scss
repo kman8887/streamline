@@ -13,6 +13,8 @@
 .tableOuter {
   border-radius: 0.5rem;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .tableFilters {
@@ -45,23 +47,26 @@
   text-align: center;
 }
 
-.genreChip {
-  display: inline-block;
-  line-height: 19px;
-  padding: 0 7px;
-  box-shadow: none;
-  border-radius: 2px;
-  cursor: pointer;
-  max-width: 200px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .priceSlider {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+@media screen and (min-width: 1600px) {
+  .xxl\:col-2 {
+    flex: 0 0 auto;
+    padding: 0.5rem;
+    width: 16.6666666667%;
+  }
+}
+
+@media screen and (min-width: 2000px) {
+  .xxxl\:col-1 {
+    flex: 0 0 auto;
+    padding: 0.5rem;
+    width: 8.33333333333%;
+  }
 }
 
 :host ::ng-deep {
@@ -76,23 +81,28 @@
     font-size: x-small;
   }
 
-  .over-pos {
+  .very-highly-rated {
     background-color: #00b300;
     color: #ffffff;
   }
 
-  .very-pos {
+  .highly-rated {
     background-color: #5b9c08;
     color: #ffffff;
   }
 
-  .most-pos {
+  .mixed {
     background-color: #88900c;
     color: #ffffff;
   }
 
-  .mixed {
+  .badly-rated {
     background-color: #f97316;
+    color: #ffffff;
+  }
+
+  .very-badly-rated {
+    background-color: #b71c1c;
     color: #ffffff;
   }
 }

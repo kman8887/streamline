@@ -1,38 +1,47 @@
 .card {
-  background: var(--surface-card);
   padding: 2rem;
   border-radius: 10px;
   margin-bottom: 1rem;
 }
-
-.tableHeader {
-  background: #f9fafb;
-  color: #374151;
-  border: 1px solid #e5e7eb;
-  border-width: 0 0 1px 0;
-  padding: 1rem 1rem;
-  font-weight: 700;
+.hero-image {
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 50vh;
+  display: flex;
+  background-position: center;
 }
 
-.tableOuter {
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  overflow: auto;
+.hero-gradient {
+  width: 100%;
+  background: linear-gradient(
+    0deg,
+    #171c21,
+    rgba(23, 28, 33, 0.879) 6.25%,
+    rgba(23, 28, 33, 0.766) 12.5%,
+    rgba(23, 28, 33, 0.66) 18.75%,
+    rgba(23, 28, 33, 0.563) 25%,
+    rgba(23, 28, 33, 0.473) 31.25%,
+    rgba(23, 28, 33, 0.391) 37.5%,
+    rgba(23, 28, 33, 0.316) 43.75%,
+    rgba(23, 28, 33, 0.25) 50%,
+    rgba(23, 28, 33, 0.191) 56.25%,
+    rgba(23, 28, 33, 0.141) 62.5%,
+    rgba(23, 28, 33, 0.098) 68.75%,
+    rgba(23, 28, 33, 0.063) 75%,
+    rgba(23, 28, 33, 0.035) 81.25%,
+    rgba(23, 28, 33, 0.016) 87.5%,
+    rgba(23, 28, 33, 0.004) 93.75%,
+    rgba(23, 28, 33, 0)
+  );
+  align-items: end;
+  display: flex;
 }
 
-.tableFilters {
-  background: #f9fafb;
-  color: #374151;
-  border: 1px solid #e5e7eb;
-  padding: 1rem 1rem;
-  font-weight: 700;
-  height: fit-content;
-  border-radius: 0.5rem;
+.hero-overlay {
+  padding: 1rem;
 }
 
 .priceLabel {
-  font-family: var(--font-family);
-  font-feature-settings: var(--font-feature-settings, normal);
   font-size: 1rem;
   font-weight: normal;
   display: block;
@@ -42,22 +51,7 @@
   text-overflow: ellipsis;
 }
 
-.tableContent {
-  background: #ffffff;
-  color: #4b5563;
-  border: 0 none;
-  padding: 0;
-}
-
-.cart {
-  min-width: 140px;
-}
-
-.records {
-  text-align: end;
-  display: block;
-}
-
+// make based on theme
 .genreChip {
   display: inline-block;
   line-height: 19px;
@@ -74,35 +68,56 @@
   text-overflow: ellipsis;
 }
 
-.date {
-  text-wrap: nowrap;
+.watch-provider-logo {
+  width: 45px;
 }
 
-.text {
-  word-break: break-all;
+.container-card {
+  border-radius: 0.5rem;
+}
+
+.match {
+  border-radius: 5px;
+  padding: 0 0.1rem;
 }
 
 :host ::ng-deep {
+  .p-chip-text {
+    font-size: 0.875rem;
+    line-height: 1;
+  }
   .p-multiselect {
     width: 100%;
   }
-  .over-pos {
+
+  .very-highly-rated {
     background-color: #00b300;
     color: #ffffff;
   }
 
-  .very-pos {
+  .highly-rated {
     background-color: #5b9c08;
     color: #ffffff;
   }
 
-  .most-pos {
+  .mixed {
     background-color: #88900c;
     color: #ffffff;
   }
 
-  .mixed {
+  .badly-rated {
     background-color: #f97316;
     color: #ffffff;
+  }
+
+  .very-badly-rated {
+    background-color: #b71c1c;
+    color: #ffffff;
+  }
+
+  .watch-provider-button .p-button {
+    padding: 0px !important;
+    min-width: 0px;
+    border-radius: 0.75rem;
   }
 }

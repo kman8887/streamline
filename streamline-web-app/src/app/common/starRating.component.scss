@@ -1,0 +1,28 @@
+.star-rating {
+  display: flex;
+  gap: 4px;
+
+  .star {
+    cursor: pointer;
+    font-size: 32px;
+    color: gray;
+
+    &.star-full {
+      color: gold;
+    }
+
+    &.star-half {
+      background: linear-gradient(to right, gold 50%, gray 50%);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    &.star-empty {
+      color: gray;
+    }
+
+    &.read-only {
+      cursor: default; // Disable pointer cursor for read-only mode
+    }
+  }
+}

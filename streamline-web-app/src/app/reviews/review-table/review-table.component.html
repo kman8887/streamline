@@ -1,0 +1,66 @@
+<div class="col-12">
+  <div class="flex gap-3 mt-4">
+    <div class="tableOuter w-full">
+      <div class="tableHeader">
+        <span class="w-full mb-1 records">{{ totalRecords }} Results</span>
+        <div class="flex flex-column md:flex-row md:justify-content-between">
+          <p-dropdown
+            [options]="sortOptions"
+            [(ngModel)]="sortKey"
+            placeholder="Sort By Reviews"
+            (onChange)="onSortChange($event)"
+            styleClass="mb-2 md:mb-0"
+          ></p-dropdown>
+          <app-review-add-edit
+            *ngIf="shouldShowAddReviewButton()"
+            [id]="movieId"
+            (onSubmit)="addReview($event)"
+          >
+          </app-review-add-edit>
+          <!-- <p-multiSelect
+            [options]="reviewTypeFilterOptions"
+            (onChange)="onFilterChange($event)"
+            [(ngModel)]="queryParams.isRecommended"
+            placeholder="Review Type"
+            [filter]="false"
+            [selectAll]="false"
+            class="w-full max-w-17rem w-17rem"
+          ></p-multiSelect> -->
+          <div class="max-w-17rem w-17rem priceSlider py-2 px-4">
+            <div class="priceLabel mb-2">
+              {{ ratingSliderValues | ratingsFilter }}
+            </div>
+            <p-slider
+              [(ngModel)]="ratingSliderValues"
+              [max]="5"
+              [min]="0"
+              [range]="true"
+              [step]="0.5"
+              class="w-full"
+              (onSlideEnd)="onRatingFilterChange($event)"
+            ></p-slider>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-nogutter tableContent">
+        <div class="col-12" *ngFor="let review of reviews; let first = first">
+          <app-review-card [data]="review" [first]="first"></app-review-card>
+          <!-- </div> -->
+        </div>
+      </div>
+      <div
+        class="text-2xl font-bold text-900 flex align-items-center m-auto w-full justify-content-center p-8"
+        *ngIf="reviews.length == 0"
+      >
+        No Reviews
+      </div>
+      <p-paginator
+        (onPageChange)="onPageChange($event)"
+        [first]="0"
+        [rows]="queryParams.pagination.pageSize"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="[10, 20, 30]"
+      ></p-paginator>
+    </div>
+  </div>
+</div>

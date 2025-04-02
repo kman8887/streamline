@@ -18,6 +18,11 @@ export class ReviewService {
     );
   }
 
+  toggleLike(reviewId: string, isLiked: boolean): Observable<any> {
+    const url = `${apiUrl}reviews/${reviewId}/like`;
+    return this.httpClient.post(url, { isLiked });
+  }
+
   updateReview(body: createEditReview): Observable<Review> {
     return this.httpClient.put<Review>(
       apiUrl + 'reviews/' + body.id,
@@ -35,7 +40,7 @@ export class ReviewService {
     console.log(body);
     console.log('here');
     return this.httpClient.post<Review>(
-      apiUrl + 'games/' + body.id + '/reviews',
+      apiUrl + 'movies/' + body.id + '/reviews',
       JSON.stringify(body, (key, value) => {
         if (key === 'id') {
           return undefined;

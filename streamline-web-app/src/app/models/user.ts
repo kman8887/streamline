@@ -1,14 +1,13 @@
 export interface User {
-  _id: string;
+  id: number;
   username: string;
-  totalProducts: number;
-  totalReviews: number;
-  totalFoundFunny: number;
-  totalFoundHelpful: number;
-  totalFoundNotHelpful: number;
+  real_name: string;
   avatar: string;
-  timecreated: Date;
+  region: string;
   auth_id: string;
-  realname: string;
-  loccountrycode: string;
+  creation_date: string;
+  avg_rating: number;
+  total_ratings: number;
+  total_likes: number;
+  total_reviews: number;
 }

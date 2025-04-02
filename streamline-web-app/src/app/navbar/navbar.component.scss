@@ -4,12 +4,22 @@
   z-index: 1;
 }
 
-body {
-  background-color: var(--mat-app-background-color);
+.spinner-div {
+  height: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .mat-drawer-content {
   z-index: 2 !important;
+}
+
+.authButtonNavBarContainer {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  padding-right: 6px;
 }
 
 .authButtonContainer {

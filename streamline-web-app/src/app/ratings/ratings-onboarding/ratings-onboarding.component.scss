@@ -1,0 +1,39 @@
+.poster-image {
+  border-bottom: 1px solid var(--primaryColor);
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  background-position: center;
+  width: 33.3333333333vh;
+  padding-top: 50vh;
+}
+
+.poster-gradient {
+  width: 100%;
+  background: linear-gradient(
+    0deg,
+    #171c21,
+    rgba(23, 28, 33, 0.879) 6.25%,
+    rgba(23, 28, 33, 0.766) 12.5%,
+    rgba(23, 28, 33, 0.66) 18.75%,
+    rgba(23, 28, 33, 0.563) 25%,
+    rgba(23, 28, 33, 0.473) 31.25%,
+    rgba(23, 28, 33, 0.391) 37.5%,
+    rgba(23, 28, 33, 0.316) 43.75%,
+    rgba(23, 28, 33, 0.25) 50%,
+    rgba(23, 28, 33, 0.191) 56.25%,
+    rgba(23, 28, 33, 0.141) 62.5%,
+    rgba(23, 28, 33, 0.098) 68.75%,
+    rgba(23, 28, 33, 0.063) 75%,
+    rgba(23, 28, 33, 0.035) 81.25%,
+    rgba(23, 28, 33, 0.016) 87.5%,
+    rgba(23, 28, 33, 0.004) 93.75%,
+    rgba(23, 28, 33, 0)
+  );
+  align-items: end;
+  display: flex;
+}
+
+.poster-overlay {
+  padding: 1rem;
+}

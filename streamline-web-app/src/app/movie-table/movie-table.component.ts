@@ -1,12 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, computed, effect } from '@angular/core';
 import { MoviesService, MoviesQueryParams } from '../services/movies.service';
-import { Movie } from '../models/movie';
+import { Movie, ShowAllMovies } from '../models/movie';
 import { PaginatorState } from 'primeng/paginator';
 import {
   faWindows,
   faApple,
   faLinux,
 } from '@fortawesome/free-brands-svg-icons';
+import { LocaleHelperService } from '../services/localeHelper.service';
+import { loadTranslations } from '@angular/localize';
+import { finalize, Subscription } from 'rxjs';
+
+export interface filterOption {
+  id: number;
+  name: String;
+}
 
 @Component({
   selector: 'app-movie-table',
@@ -14,59 +22,88 @@ import {
   styleUrls: ['./movie-table.component.scss'],
 })
 export class MovieTableComponent implements OnInit {
-  movies: Movie[] = [];
-
   faWindows = faWindows;
   faApple = faApple;
   faLinux = faLinux;
 
   sortOptions = [
-    { label: 'Review Count', value: 'review_count:-1' },
-    // { label: 'Price High to Low', value: 'priceSorting:-1' },
-    // { label: 'Price Low to High', value: 'priceSorting' },
+    { label: 'Popularity', value: 'popularity:-1' },
+    { label: 'Vote Average', value: 'vote_average:-1' },
+    { label: 'Vote Count', value: 'vote_count:-1' },
     { label: 'Release Date', value: 'release_date:-1' },
-    // { label: 'Sentiment', value: 'sentiment' },
   ];
 
-  genresFilterOptions: string[] = [];
-  tagsFilterOptions: string[] = [];
-  // platformsFilterOptions = [
-  //   { label: 'Mac', value: 'mac' },
-  //   { label: 'Windows', value: 'windows' },
-  //   { label: 'Linux', value: 'linux' },
-  // ];
+  rowsPerPageOptions: number[] = [12, 24, 36, 48, 60];
+  first: number = 0;
+  rows: number = 12;
 
-  sortKey: string = '';
+  sortKey: string = 'popularity:-1';
 
-  totalRecords = 0;
-
-  priceSliderValue = 70;
+  ratingSliderValues: number[] = [0, 10];
 
   queryParams: MoviesQueryParams = {
+    language: 'en',
     pagination: {
       pageNumber: 0,
-      pageSize: 10,
+      pageSize: 12,
     },
   };
 
-  constructor(private moviesService: MoviesService) {}
+  loading = signal(false);
+  movies = signal<ShowAllMovies[]>([]);
+  genresFilterOptions = signal<filterOption[]>([]);
+  tagsFilterOptions = signal<filterOption[]>([]);
+  watchProvidersFilterOptions = signal<filterOption[]>([]);
+  totalRecords = signal(0);
+
+  private moviesSubscription: Subscription | null = null;
+
+  constructor(
+    private moviesService: MoviesService,
+    private localHelper: LocaleHelperService
+  ) {}
 
   ngOnInit(): void {
-    this.getMovies();
+    console.log(this.localHelper.getUsersLocale());
+    this.getMoviesAndFilters();
   }
 
-  getMovies(): void {
-    this.moviesService.findMovies(this.queryParams).subscribe((response) => {
-      this.movies = response.data;
-      this.totalRecords = response.pageInfo.totalRecords;
-      this.genresFilterOptions = response.pageInfo.distinctGenres;
-      this.tagsFilterOptions = response.pageInfo.distinctTags;
+  ngOnDestroy() {
+    this.moviesSubscription ? this.moviesSubscription.unsubscribe() : null;
+  }
+
+  getMoviesAndFilters(): void {
+    this.getMovies();
+    this.getFilters();
+  }
+
+  getFilters(): void {
+    this.moviesService.getMovieFilters().subscribe((response) => {
+      this.genresFilterOptions.set(response.genres);
+      this.tagsFilterOptions.set(response.tags);
+      this.watchProvidersFilterOptions.set(response.watch_providers);
     });
   }
 
+  getMovies(): void {
+    this.loading.set(true);
+
+    if (this.moviesSubscription) {
+      this.moviesSubscription.unsubscribe();
+    }
+
+    this.moviesSubscription = this.moviesService
+      .findMovies(this.queryParams)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe((response) => {
+        this.movies.set(response.movies);
+        this.totalRecords.set(response.total_count);
+      });
+  }
   onSortChange(event: any) {
     let value = event.value;
     console.log('sort change');
+    console.log(event.value);
 
     if (value.indexOf(':') > 0) {
       this.queryParams.sort = value;
@@ -82,13 +119,9 @@ export class MovieTableComponent implements OnInit {
     this.getMovies();
   }
 
-  onPriceFilterChange(event: any) {
+  onRatingFilterChange(event: any) {
     console.log(event);
-    if (this.priceSliderValue >= 70) {
-      this.queryParams.price = undefined;
-    } else {
-      this.queryParams.price = this.priceSliderValue;
-    }
+    this.queryParams.ratings = this.ratingSliderValues;
     this.getMovies();
   }
 
@@ -96,36 +129,14 @@ export class MovieTableComponent implements OnInit {
     this.getMovies();
   }
 
-  getMoviePosterUrl(poster_url: string) {
-    const baseUrl: string = 'https://image.tmdb.org/t/p/w185';
-    return baseUrl + poster_url;
-  }
-
-  // getSeverity(movie: Movie): string | undefined {
-  //   switch (movie.sentiment) {
-  //     case 'Overwhelmingly Positive':
-  //       return 'over-pos';
-
-  //     case 'Very Positive':
-  //       return 'very-pos';
-
-  //     case 'Mostly Positive':
-  //       return 'most-pos';
-
-  //     case 'Mixed':
-  //       return 'mixed';
-
-  //     default:
-  //       return undefined;
-  //   }
-  // }
-
   onPageChange(event: PaginatorState) {
     console.log('page change');
     console.log(event);
     this.queryParams.pagination.pageNumber = event.page ? event.page : 0;
-    this.queryParams.pagination.pageSize = event.rows ? event.rows : 10;
+    this.queryParams.pagination.pageSize = event.rows ? event.rows : 12;
     console.log(this.movies.length);
+    this.first = event.first ? event.first : 0;
+    this.rows = event.rows ? event.rows : 12;
     this.getMovies();
   }
 }

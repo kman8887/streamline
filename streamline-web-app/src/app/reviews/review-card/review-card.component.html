@@ -1,0 +1,68 @@
+<div
+  class="flex align-items-center py-3 px-3"
+  [ngClass]="{ 'border-top-1 surface-border': !first }"
+>
+  <div
+    class="flex flex-column align-items-start sm:align-items-start gap-3 w-6 md:w-3"
+  >
+    <div class="flex gap-1" [routerLink]="['/user', data.review['user_id']]">
+      <img
+        class="w-4 shadow-2 block xl:block border-round"
+        [src]="getAvatar(data.review.avatar)"
+        [alt]="data.review.username"
+      />
+      <div class="flex align-items-start gap-3">
+        <div class="text-2xl font-bold text-900 text">
+          {{ data.review.username }}
+        </div>
+      </div>
+    </div>
+    <div class="flex align-items-start gap-3 date">
+      <div>
+        {{ data.review.created_at | date : "mediumDate" }}
+      </div>
+      <app-review-add-edit
+        [formData]="getEditReviewData(data.review)"
+        [id]="data.review.review_id"
+        (onSubmit)="updateReview($event)"
+        *ngIf="data.canEditAndDeleteReview"
+      >
+      </app-review-add-edit>
+      <p-button
+        (click)="deleteReview(data.review.review_id)"
+        label="Delete Review"
+        *ngIf="data.canEditAndDeleteReview"
+      ></p-button>
+    </div>
+  </div>
+  <div class="flex-grow-1 flex flex-order-0 text gap-3">
+    <div>
+      {{ data.review.review_text }}
+    </div>
+  </div>
+
+  <div *ngIf="shouldShowMovie()" class="flex p-1">
+    <img
+      class="w-full shadow-2 block m-auto border-round movie-poster"
+      [src]="moviePosterUrl"
+      [alt]="movieTitle"
+      [routerLink]="['/movies', movieId]"
+    />
+  </div>
+  <div
+    class="rating-and-likes flex sm:flex-column align-items-center gap-3 sm:gap-2 w-6 md:w-2"
+  >
+    <app-star-rating
+      *ngIf="shouldShowRating()"
+      [(rating)]="data.review.rating"
+      [readOnly]="true"
+    ></app-star-rating>
+    <div class="flex align-items-center">
+      <app-like-button
+        [isLiked]="data.review.isReviewLiked"
+        (toggleLike)="onReviewLikeToggle($event)"
+      ></app-like-button>
+      <span>{{ data.review.like_count }} likes</span>
+    </div>
+  </div>
+</div>

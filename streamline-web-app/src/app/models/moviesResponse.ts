@@ -1,10 +1,17 @@
-import { Movie } from './movie';
+import { filterOption } from '../movie-table/movie-table.component';
+import { Movie, ShowAllMovies } from './movie';
 
 export interface MoviesResponse {
-  data: Movie[];
-  pageInfo: {
-    distinctGenres: string[];
-    distinctTags: string[];
-    totalRecords: number;
-  };
+  movies: ShowAllMovies[];
+  total_count: number;
+}
+
+export interface MovieFiltersResponse {
+  genres: filterOption[];
+  tags: filterOption[];
+  watch_providers: filterOption[];
+}
+
+export interface MovieRecommendationResponse {
+  predicted_score: number;
 }

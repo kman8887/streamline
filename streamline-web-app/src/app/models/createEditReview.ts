@@ -1,6 +1,5 @@
 export interface createEditReview {
   text: string;
-  hours: number;
-  isRecommended: boolean;
+  rating: number;
   id: string;
 }

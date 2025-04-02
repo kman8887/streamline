@@ -7,7 +7,7 @@
         <p-dropdown
           [options]="sortOptions"
           [(ngModel)]="sortKey"
-          placeholder="Sort By Review Count"
+          placeholder="Sort By Popularity"
           (onChange)="onSortChange($event)"
           styleClass="mb-2 md:mb-0"
         ></p-dropdown>
@@ -16,113 +16,67 @@
           <input
             type="search"
             pInputText
-            placeholder="Search by name or developer"
+            placeholder="Search by title, cast, or crew"
             [(ngModel)]="queryParams.search"
             class="w-full"
             (keydown.enter)="onFilterChange()"
           />
         </span>
       </div>
-      <div class="grid grid-nogutter tableContent">
-        <div class="col-12" *ngFor="let movie of movies; let first = first">
-          <div
-            class="flex flex-column xl:flex-row p-4 gap-4"
-            [ngClass]="{ 'border-top-1 surface-border': !first }"
-          >
-            <img
-              class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block m-auto border-round"
-              [src]="getMoviePosterUrl(movie.poster_path)"
-              [alt]="movie.title"
-            />
-            <div
-              class="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4"
-            >
-              <div
-                class="flex flex-column align-items-center sm:align-items-start gap-3"
-              >
-                <div class="flex align-items-center gap-3">
-                  <div class="text-2xl font-bold text-900">
-                    {{ movie.title }}
-                  </div>
-                  <!-- <fa-icon
-                    *ngIf="movie.platforms.windows"
-                    [icon]="faWindows"
-                    size="lg"
-                  ></fa-icon>
-                  <fa-icon
-                    *ngIf="movie.platforms.mac"
-                    [icon]="faApple"
-                    size="lg"
-                  ></fa-icon>
-                  <fa-icon
-                    *ngIf="movie.platforms.linux"
-                    [icon]="faLinux"
-                    size="lg"
-                  ></fa-icon> -->
-                </div>
-                <div class="flex align-items-center gap-2 flex-wrap">
-                  <span *ngFor="let genre of movie.genres" class="genreChip">{{
-                    genre
-                  }}</span>
-                </div>
-                <div class="flex align-items-center gap-3">
-                  <div>
-                    {{ movie.release_date }}
-                  </div>
-                  <!-- <p-tag
-                    [value]="movie.sentiment"
-                    [styleClass]="getSeverity(movie)"
-                  ></p-tag> -->
-                </div>
-              </div>
-              <div
-                class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2 cart"
-              >
-                <!-- <span class="text-2xl font-semibold">{{
-                  movie.price | price
-                }}</span> -->
-                <button
-                  pButton
-                  icon="pi pi-shopping-cart"
-                  class="md:align-self-end mb-2 p-button-rounded"
-                  [routerLink]="['/movies', movie._id]"
-                ></button>
-              </div>
-            </div>
-          </div>
+      <div
+        *ngIf="!loading(); else loadingTemplate"
+        class="grid grid-nogutter tableContent"
+      >
+        <div
+          class="col-12 md:col-6 lg:col-4 xl:col-3 xxl:col-2 xxxl:col-1"
+          *ngFor="let movie of movies()"
+        >
+          <app-movie-card [movie]="movie"></app-movie-card>
         </div>
       </div>
       <div
         class="no-movies-text flex align-items-center m-auto w-full justify-content-center p-8"
-        *ngIf="movies.length == 0"
+        *ngIf="movies().length == 0 && !loading()"
       >
         No Movies Match The Filters
       </div>
+      <ng-template #loadingTemplate>
+        <div class="spinner-div">
+          <p-progressSpinner></p-progressSpinner>
+        </div>
+      </ng-template>
       <p-paginator
+        *ngIf="!loading()"
         (onPageChange)="onPageChange($event)"
-        [first]="0"
+        [first]="first"
         [rows]="queryParams.pagination.pageSize"
         [totalRecords]="totalRecords"
-        [rowsPerPageOptions]="[10, 20, 30]"
+        [rowsPerPageOptions]="rowsPerPageOptions"
       ></p-paginator>
     </div>
     <div class="flex flex-column gap-3 tableFilters">
       <p-multiSelect
-        [options]="genresFilterOptions"
+        [options]="genresFilterOptions()"
+        optionLabel="name"
+        optionValue="id"
         (onChange)="onFilterChange()"
         [(ngModel)]="queryParams.genre"
         placeholder="Filter By Genre"
         class="w-full max-w-17rem w-17rem"
       ></p-multiSelect>
-      <!-- <p-multiSelect
-        [options]="platformsFilterOptions"
-        (onChange)="onFilterChange()"
-        [(ngModel)]="queryParams.platform"
-        placeholder="Filter By Platform"
-        class="w-full max-w-17rem w-17rem"
-      ></p-multiSelect> -->
       <p-multiSelect
-        [options]="tagsFilterOptions"
+        [options]="watchProvidersFilterOptions()"
+        optionLabel="name"
+        optionValue="id"
+        (onChange)="onFilterChange()"
+        [(ngModel)]="queryParams.watchProviders"
+        placeholder="Filter By Watch Provider"
+        class="w-full max-w-17rem w-17rem"
+      ></p-multiSelect>
+      <p-multiSelect
+        [options]="tagsFilterOptions()"
+        optionLabel="name"
+        optionValue="id"
         (onChange)="onFilterChange()"
         [(ngModel)]="queryParams.tags"
         placeholder="Filter By Tag"
@@ -132,34 +86,35 @@
       ></p-multiSelect>
       <div class="w-full priceSlider">
         <div class="priceLabel mb-2">
-          {{ priceSliderValue | priceFilter }}
+          {{ ratingSliderValues | ratingsFilter }}
         </div>
         <p-slider
-          [(ngModel)]="priceSliderValue"
-          [max]="70"
+          [(ngModel)]="ratingSliderValues"
+          [max]="10"
           [min]="0"
-          [step]="5"
+          [range]="true"
+          [step]="1"
           class="w-full"
-          (onSlideEnd)="onPriceFilterChange($event)"
+          (onSlideEnd)="onRatingFilterChange($event)"
         ></p-slider>
       </div>
       <div class="flex-auto">
-        <label for="yearpicker" class="font-bold block mb-2">
-          Release Year
+        <label for="daterangepicker" class="font-bold block mb-2">
+          Release Date
         </label>
         <p-calendar
-          [(ngModel)]="queryParams.release_date"
-          view="year"
-          dateFormat="yy"
-          inputId="yearpicker"
+          [(ngModel)]="queryParams.releaseDates"
+          inputId="daterangepicker"
           [showIcon]="true"
           class="w-full"
+          placeholder="20/08/2025"
+          selectionMode="range"
           [showButtonBar]="true"
           (onSelect)="onDateSelectChange($event)"
           (onClearClick)="onDateSelectChange($event)"
         ></p-calendar>
       </div>
-      <span class="w-full m-auto records">{{ totalRecords }} Results</span>
+      <span class="w-full m-auto records">{{ totalRecords() }} Results</span>
     </div>
   </div>
 </div>

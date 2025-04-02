@@ -1,10 +1,15 @@
-import { MoviesQueryParams, ReviewsQueryParams } from './movies.service';
+import {
+  MoviesQueryParams,
+  Pagination,
+  ReviewsQueryParams,
+} from './movies.service';
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
+import { isEmpty } from 'lodash';
 
 @Injectable({ providedIn: 'root' })
 export class QueryParamBuilderService {
-  buildMovieParams(queryParams: MoviesQueryParams) {
+  buildMovieParams(queryParams: MoviesQueryParams): HttpParams {
     let params = new HttpParams();
 
     if (queryParams.genre) {
@@ -15,19 +20,32 @@ export class QueryParamBuilderService {
       params = params.appendAll({ tags: queryParams.tags });
     }
 
-    if (queryParams.platform) {
-      params = params.appendAll({ platforms: queryParams.platform });
+    if (queryParams.watchProviders) {
+      params = params.appendAll({ watchProviders: queryParams.watchProviders });
     }
 
-    if (queryParams.price !== undefined && queryParams.price !== null) {
-      params = params.append('price', queryParams.price.toString());
+    if (queryParams.ratings !== undefined) {
+      params = params.append('ratingFrom', queryParams.ratings[0]);
+      params = params.append('ratingTo', queryParams.ratings[1]);
     }
 
-    if (queryParams.release_date) {
+    if (
+      queryParams.releaseDates !== undefined &&
+      isEmpty(queryParams.releaseDates) === false &&
+      queryParams.releaseDates.length > 0 &&
+      queryParams.releaseDates[0]
+    ) {
       params = params.append(
-        'release_date',
-        queryParams.release_date.getFullYear()
+        'release_date_from',
+        queryParams.releaseDates[0].toISOString()
       );
+
+      if (queryParams.releaseDates[1]) {
+        params = params.append(
+          'release_date_to',
+          queryParams.releaseDates[1].toISOString()
+        );
+      }
     }
 
     if (queryParams.search) {
@@ -38,21 +56,21 @@ export class QueryParamBuilderService {
       params = params.append('sort', queryParams.sort);
     }
 
-    if (queryParams.pagination) {
-      const pagination = queryParams.pagination;
-      if (pagination.pageNumber) {
-        params = params.append('pn', pagination.pageNumber);
-      }
+    if (queryParams.language) {
+      params = params.append('language', queryParams.language);
+    }
 
-      if (pagination.pageSize) {
-        params = params.append('ps', pagination.pageSize);
-      }
+    if (queryParams.pagination) {
+      params = this.buildPaginationParams(queryParams.pagination, params);
     }
 
     return params;
   }
 
-  buildReviewParams(queryParams: ReviewsQueryParams, userId?: string) {
+  buildReviewParams(
+    queryParams: ReviewsQueryParams,
+    userId?: string
+  ): HttpParams {
     let params = new HttpParams();
 
     if (userId) {
@@ -60,24 +78,58 @@ export class QueryParamBuilderService {
     }
 
     if (queryParams.isRecommended && queryParams.isRecommended.length > 0) {
-      console.log(queryParams.isRecommended);
       params = params.append('isRecommended', queryParams.isRecommended[0]);
-      console.log(params);
     }
 
     if (queryParams.sort) {
       params = params.append('sort', queryParams.sort);
     }
 
-    if (queryParams.pagination) {
-      const pagination = queryParams.pagination;
-      if (pagination.pageNumber) {
-        params = params.append('pn', pagination.pageNumber);
-      }
+    if (queryParams.ratings !== undefined) {
+      params = params.append('ratingFrom', queryParams.ratings[0] * 2);
+      params = params.append('ratingTo', queryParams.ratings[1] * 2);
+    }
 
-      if (pagination.pageSize) {
-        params = params.append('ps', pagination.pageSize);
-      }
+    if (queryParams.pagination) {
+      params = this.buildPaginationParams(queryParams.pagination, params);
+    }
+
+    return params;
+  }
+
+  buildOnboardingParams(pageNumber: number): HttpParams {
+    const pagination: Pagination = {
+      pageNumber: pageNumber,
+    };
+    let params = new HttpParams();
+
+    params = this.buildPaginationParams(pagination, params);
+
+    return params;
+  }
+
+  buildRecommendationParams(movie_id: string): HttpParams {
+    let params = new HttpParams();
+
+    if (movie_id) {
+      console.log('Here');
+      params = params.append('movie_id', movie_id);
+    }
+
+    return params;
+  }
+
+  private buildPaginationParams(
+    pagination: Pagination,
+    params: HttpParams
+  ): HttpParams {
+    console.log(pagination.pageNumber);
+    if (pagination.pageNumber) {
+      params = params.append('pn', pagination.pageNumber);
+    }
+
+    if (pagination.pageSize) {
+      params = params.append('ps', pagination.pageSize);
     }
 
     return params;

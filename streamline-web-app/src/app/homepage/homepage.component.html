@@ -1,0 +1,17 @@
+<div class="outer-card">
+  <div class="card">
+    <span class="text-500 ml-7">Comedy</span>
+    <p-carousel
+      *ngIf="movies"
+      [value]="movies"
+      [numVisible]="5"
+      [numScroll]="5"
+      [circular]="false"
+      [responsiveOptions]="responsiveOptions"
+    >
+      <ng-template let-movie pTemplate="item">
+        <app-carousel-card [movie]="movie"></app-carousel-card>
+      </ng-template>
+    </p-carousel>
+  </div>
+</div>

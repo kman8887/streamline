@@ -23,6 +23,7 @@ import { MovieTableComponent } from './movie-table/movie-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MoviesService } from './services/movies.service';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
@@ -32,7 +33,7 @@ import { PricePipe } from './movie-table/price.pipe';
 import { InputTextModule } from 'primeng/inputtext';
 import { SliderModule } from 'primeng/slider';
 import { CalendarModule } from 'primeng/calendar';
-import { PriceFilterPipe } from './movie-table/price-filter.pipe';
+import { RatingsFilterPipe } from './movie-table/ratings-filter.pipe';
 import { ChipModule } from 'primeng/chip';
 import { StyleClassModule } from 'primeng/styleclass';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -49,18 +50,45 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ReactionCountPipe } from './movie/reaction-count.pipe';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MovieCardComponent } from './movie-card/movie-card.component';
+import { TimePipe } from './movie/time.pipe';
+import { LikeButtonComponent } from './common/likeButton.component';
+import { HttpContextInterceptor } from './interceptors/httpContext.interceptor';
+import { WatchButtonComponent } from './common/watchButton.component';
+import { RatingModule } from 'primeng/rating';
+import { RatingsOnboardingComponent } from './ratings/ratings-onboarding/ratings-onboarding.component';
+import { RatingsOnboardingDynamicDialogComponent } from './ratings/ratings-onboarding-dynamic-dialog/ratings-onboarding-dynamic-dialog.component';
+import { StarRatingComponent } from './common/starRating.component';
+import { PeoplePipe } from './movie/people.pipe';
+import { ReviewCardComponent } from './reviews/review-card/review-card.component';
+import { ReviewTableComponent } from './reviews/review-table/review-table.component';
+import { HomepageComponent } from './homepage/homepage.component';
+import { CarouselModule } from 'primeng/carousel';
+import { CarouselCardComponent } from './carousel-card/carousel-card.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     MovieTableComponent,
+    MovieCardComponent,
     PricePipe,
-    PriceFilterPipe,
+    RatingsFilterPipe,
+    TimePipe,
     MovieComponent,
     AccountComponent,
     ReviewAddEditComponent,
     ReactionCountPipe,
+    LikeButtonComponent,
+    WatchButtonComponent,
+    RatingsOnboardingComponent,
+    RatingsOnboardingDynamicDialogComponent,
+    StarRatingComponent,
+    PeoplePipe,
+    ReviewCardComponent,
+    ReviewTableComponent,
+    HomepageComponent,
+    CarouselCardComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -69,6 +97,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     BrowserAnimationsModule,
     MatToolbarModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatSidenavModule,
     MatIconModule,
     MatListModule,
@@ -85,9 +114,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     TagModule,
+    RatingModule,
     ButtonModule,
     PaginatorModule,
     MultiSelectModule,
+    CarouselModule,
     InputTextModule,
     SliderModule,
     CalendarModule,
@@ -110,16 +141,43 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
       httpInterceptor: {
         allowedList: [
           {
+            uri: 'http://localhost:5000/api/v1.0/movies/*',
+            httpMethod: HttpMethod.Get,
+            allowAnonymous: true,
+          },
+          {
+            uri: 'http://localhost:5000/api/v1.0/movies',
+            httpMethod: HttpMethod.Get,
+            allowAnonymous: true,
+          },
+          {
+            uri: 'http://localhost:5000/api/v1.0/movies/onboarding',
+            httpMethod: HttpMethod.Get,
+          },
+          {
             uri: 'http://localhost:5000/api/v1.0/users',
             httpMethod: HttpMethod.Post,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/games/*',
+            uri: 'http://localhost:5000/api/v1.0/users/*',
+            httpMethod: HttpMethod.Post,
+          },
+          {
+            uri: 'http://localhost:5000/api/v1.0/users/*',
+            httpMethod: HttpMethod.Get,
+            allowAnonymous: true,
+          },
+          {
+            uri: 'http://localhost:5000/api/v1.0/movies/*',
             httpMethod: HttpMethod.Post,
           },
           {
             uri: 'http://localhost:5000/api/v1.0/reviews/*',
             httpMethod: HttpMethod.Put,
+          },
+          {
+            uri: 'http://localhost:5000/api/v1.0/reviews/*',
+            httpMethod: HttpMethod.Post,
           },
           {
             uri: 'http://localhost:5000/api/v1.0/reviews/*',
@@ -134,6 +192,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     UserService,
     QueryParamBuilderService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpContextInterceptor,
+      multi: true,
+    },
     provideHttpClient(withInterceptorsFromDi()),
   ],
 })

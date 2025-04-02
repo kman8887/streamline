@@ -20,19 +20,12 @@
     <div class="navigationMenu">
       <ul>
         <li>
-          <a
-            mat-menu-item
-            id="moviesButton"
-            class="navBarLink"
-            href="/marketplace?type=buy"
-          >
+          <a mat-menu-item id="moviesButton" class="navBarLink" href="/movies">
             Movies
           </a>
         </li>
         <li>
-          <a mat-menu-item class="navBarLink" href="/marketplace?type=rent">
-            My Lists
-          </a>
+          <a mat-menu-item class="navBarLink" href="/lists"> My Lists </a>
         </li>
         <li>
           <a mat-menu-item class="navBarLink" href="/aboutUs"> About </a>
@@ -69,9 +62,11 @@
       </mat-menu>
     </ng-container>
     <ng-template #loggedOut>
-      <button class="authButton" mat-flat-button (click)="login()">
-        Login / Sign Up
-      </button>
+      <div class="authButtonNavBarContainer">
+        <button class="authButton" mat-flat-button (click)="login()">
+          Login / Sign Up
+        </button>
+      </div>
     </ng-template>
     <button
       class="hamburger"
@@ -94,6 +89,8 @@
   </nav>
   <ng-content></ng-content>
 </ng-container>
-<ng-template class="flex justify-content-center" #spinner>
-  <p-progressSpinner></p-progressSpinner>
+<ng-template #spinner>
+  <div class="spinner-div">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
 </ng-template>

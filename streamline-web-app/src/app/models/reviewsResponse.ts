@@ -1,6 +1,6 @@
-import { Review } from './movie';
+import { Review, ReviewWithMovie } from './movie';
 
 export interface ReviewsResponse {
-  data: Review[];
-  totalRecords: number;
+  reviews: Review[] | ReviewWithMovie[];
+  total_count: number;
 }

@@ -1,0 +1,25 @@
+<div class="flex flex-column p-1 gap-2 poster">
+  <img
+    class="poster shadow-2 block m-auto border-round"
+    [src]="getMoviePosterUrl(movie.poster_path)"
+    [alt]="movie.title"
+    [routerLink]="['/movies', movie.id]"
+  />
+  <div
+    class="flex flex-row justify-content-between align-items-center gap-4 p-1"
+  >
+    <div>{{ movie.release_date | date : "yyyy" }}</div>
+    <span
+      *ngIf="recommendationScore"
+      class="match"
+      [ngClass]="recommendationStyling"
+    >
+      {{ recommendationScore }} Match
+    </span>
+    <p-tag
+      *ngIf="!recommendationScore"
+      [value]="getVoteAveragePercentage(movie.vote_average)"
+      [styleClass]="getVoteAverageStyling(movie.vote_average)"
+    ></p-tag>
+  </div>
+</div>

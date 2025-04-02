@@ -1,30 +1,63 @@
+import { InteractionType } from './interactionType.enum';
+import { WatchProviderType } from './watchProviderType.enum';
+
 export interface Movie {
-  title: string;
+  backdrop_path: string;
   genres: Genre[];
+  id: string;
+  original_language: string;
+  overview: string;
+  release_date: Date;
+  runtime: number;
+  status: string;
+  tagline: string;
+  tags: Tag[];
+  title: string;
+  user_interactions: UserInteraction[];
+  vote_average: number;
+  vote_count: number;
+  watch_providers: WatchProvider[];
+  director: string[];
+  writer: string[];
+  top_cast: string[];
+}
+
+export interface ShowAllMovies {
+  id: string;
+  title: string;
+  vote_average: number;
+  release_date: Date;
+  genres: Genre[];
+  poster_path: string;
+}
+
+export interface ShowAllMoviesWithRecommendation extends ShowAllMovies {
+  recommendation_score: number;
+}
+
+export interface OnboardingMovie {
+  id: string;
+  title: string;
   release_date: Date;
   poster_path: string;
-  _id: string;
-  interaction_count: number;
-  // developer: string;
-  // publisher: string;
-  keywords: Keyword[];
-  tagline: string;
-  // reviews: Review[];
 }
 
 export interface Review {
-  _id: string;
-  username: string;
-  text: string;
-  hours: number;
-  date: string;
-  products: number;
-  isRecommended: boolean;
-  avatar: string;
+  review_id: string;
   user_id: string;
-  found_funny: string[];
-  found_helpful: string[];
-  found_not_helpful: string[];
+  username: string;
+  avatar: string;
+  review_text: string;
+  created_at: Date;
+  like_count: number;
+  rating: number;
+  isReviewLiked: boolean;
+}
+
+export interface ReviewWithMovie extends Review {
+  movie_id: string;
+  title: string;
+  poster_path: string;
 }
 
 interface Genre {
@@ -32,7 +65,22 @@ interface Genre {
   name: string;
 }
 
-interface Keyword {
+interface Tag {
   id: number;
   name: string;
+}
+
+export interface UserInteraction {
+  id: number;
+  rating: number | null;
+  type: InteractionType;
+  created_at: Date;
+}
+
+export interface WatchProvider {
+  id: number;
+  name: string;
+  logo_path: string;
+  priority: number;
+  type: WatchProviderType;
 }
