@@ -36,8 +36,8 @@ export class HttpContextInterceptor implements HttpInterceptor {
           if (user && user['region']) {
             headers = headers.set('X-Region', user['region']);
           }
-          if (user && user['language']) {
-            headers = headers.set('X-Languages', user['language'].join(','));
+          if (user && user['languages']) {
+            headers = headers.set('X-Languages', user['languages'].join(','));
           }
         });
 

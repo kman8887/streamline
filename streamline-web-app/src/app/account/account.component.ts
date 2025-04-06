@@ -27,6 +27,7 @@ export class AccountComponent {
   user: User | undefined;
   loggedInUserId: string = '';
   roles: string[] = [];
+  average_rating = '';
 
   reviewTableData?: ReviewTableData;
 
@@ -46,6 +47,7 @@ export class AccountComponent {
       .getUser(this.route.snapshot.params['id'])
       .subscribe((response) => {
         this.user = response;
+        this.average_rating = this.user.avg_rating.toFixed(2);
       });
   }
 

@@ -39,7 +39,7 @@ export class MovieComponent {
   isMovieLiked = false;
   isMovieWatched = false;
 
-  recommendationScore: number = 0;
+  recommendationScore?: number;
   rating: number = 0;
   watchProviders: WatchProvidersByType | undefined;
 
@@ -80,7 +80,9 @@ export class MovieComponent {
         this.moviesService
           .getRecommendation(this.loggedInUserId, movie_id)
           .subscribe((response) => {
-            this.recommendationScore = response.predicted_score;
+            if (response != null) {
+              this.recommendationScore = response.predicted_score;
+            }
           });
       }
 
@@ -143,6 +145,29 @@ export class MovieComponent {
           this.isMovieWatched = !this.isMovieWatched; // Revert UI state on failure
         },
       });
+    }
+  }
+
+  onMovieWatchListToggle(newState: boolean): void {
+    if (this.movie != undefined) {
+      this.movie.is_in_watchlist = newState;
+      this.moviesService
+        .toggleMovieWatchList(this.movie.id, newState)
+        .subscribe({
+          next: () => {
+            console.log(
+              `Movie ${
+                this.movie?.is_in_watchlist
+                  ? 'in watch list'
+                  : 'removed from watch list'
+              }`
+            );
+          },
+          error: (err) => {
+            console.error('Error toggling watchlist:', err);
+            this.movie!.is_in_watchlist = !this.movie?.is_in_watchlist; // Revert UI state on failure
+          },
+        });
     }
   }
 

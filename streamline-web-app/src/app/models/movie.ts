@@ -14,6 +14,7 @@ export interface Movie {
   tags: Tag[];
   title: string;
   user_interactions: UserInteraction[];
+  is_in_watchlist: boolean;
   vote_average: number;
   vote_count: number;
   watch_providers: WatchProvider[];
@@ -29,9 +30,20 @@ export interface ShowAllMovies {
   release_date: Date;
   genres: Genre[];
   poster_path: string;
+  backdrop_path: string;
 }
 
 export interface ShowAllMoviesWithRecommendation extends ShowAllMovies {
+  recommendation_score: number;
+}
+
+export interface WatchListMovie {
+  id: string;
+  title: string;
+  vote_average: number;
+  release_date: Date;
+  poster_path: string;
+  backdrop_path: string;
   recommendation_score: number;
 }
 

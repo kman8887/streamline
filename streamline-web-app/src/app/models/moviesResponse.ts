@@ -1,8 +1,18 @@
 import { filterOption } from '../movie-table/movie-table.component';
-import { Movie, ShowAllMovies } from './movie';
+import {
+  Movie,
+  ShowAllMovies,
+  ShowAllMoviesWithRecommendation,
+  WatchListMovie,
+} from './movie';
 
 export interface MoviesResponse {
-  movies: ShowAllMovies[];
+  movies: ShowAllMovies[] | ShowAllMoviesWithRecommendation[];
+  total_count: number;
+}
+
+export interface WatchListResponse {
+  movies: WatchListMovie[];
   total_count: number;
 }
 

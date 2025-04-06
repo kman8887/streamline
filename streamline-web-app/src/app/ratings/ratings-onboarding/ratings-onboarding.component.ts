@@ -7,7 +7,7 @@ import { UserService } from '../../services/user.service';
 import { AuthService } from '@auth0/auth0-angular';
 
 export interface MovieRating
-  extends Omit<ShowAllMovies, 'vote_average' | 'genres'> {
+  extends Omit<ShowAllMovies, 'vote_average' | 'genres' | 'backdrop_path'> {
   rating?: number;
 }
 
@@ -31,6 +31,7 @@ export class RatingsOnboardingComponent implements OnDestroy {
   };
   rating: number = 0;
   pageNumber = 0;
+  progress = 0;
 
   constructor(
     private moviesService: MoviesService,
@@ -74,8 +75,6 @@ export class RatingsOnboardingComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.moviesSubscription ? this.moviesSubscription.unsubscribe() : null;
-    console.log(this.currentUserId);
-    console.log(this.getFilteredMovieRatings());
     if (this.currentUserId !== null) {
       const filteredMovies = this.getFilteredMovieRatings();
       if (filteredMovies.length > 0) {
@@ -112,6 +111,12 @@ export class RatingsOnboardingComponent implements OnDestroy {
     if (this.rating !== undefined && this.rating !== null) {
       this.movies[currentIndex].rating = this.rating;
     }
+    this.progress += 50;
+    if (this.progress >= 100) {
+      this.ref.close(this.progress);
+      return;
+    }
+
     this.nextMovie();
   }
 

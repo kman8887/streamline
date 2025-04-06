@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../models/user';
+import { UpdateUser, User, UserWatchProviders } from '../models/user';
 import { ReviewsResponse } from '../models/reviewsResponse';
 import { QueryParamBuilderService } from './queryParamBuilder.service';
 import { ReviewsQueryParams } from './movies.service';
@@ -20,6 +20,12 @@ export class UserService {
 
   getUser(id: string): Observable<User> {
     return this.httpClient.get<User>(apiUrl + 'users/' + id);
+  }
+
+  getUserWatchProviders(id: number): Observable<UserWatchProviders> {
+    return this.httpClient.get<UserWatchProviders>(
+      apiUrl + 'users/' + id + '/watch-providers'
+    );
   }
 
   createUser(body = {}): Observable<User> {
@@ -44,5 +50,9 @@ export class UserService {
   ): Observable<Object> {
     let url = `${apiUrl}users/${userId}/bulk-rate`;
     return this.httpClient.post(url, movieRatings);
+  }
+
+  updateUser(userId: number, body: UpdateUser): Observable<User> {
+    return this.httpClient.put<User>(`${apiUrl}users/${userId}`, body);
   }
 }

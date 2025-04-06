@@ -4,6 +4,8 @@ import { MovieTableComponent } from './movie-table/movie-table.component';
 import { MovieComponent } from './movie/movie.component';
 import { AccountComponent } from './account/account.component';
 import { HomepageComponent } from './homepage/homepage.component';
+import { WatchlistComponent } from './watchlist/watchlist.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   {
@@ -21,6 +23,14 @@ const routes: Routes = [
   {
     path: 'user/:id',
     component: AccountComponent,
+  },
+  {
+    path: 'lists',
+    component: WatchlistComponent,
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
   },
 ];
 

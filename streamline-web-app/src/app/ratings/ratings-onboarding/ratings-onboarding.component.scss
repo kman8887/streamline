@@ -5,7 +5,7 @@
   display: flex;
   background-position: center;
   width: 33.3333333333vh;
-  padding-top: 50vh;
+  aspect-ratio: 2 / 3;
 }
 
 .poster-gradient {
@@ -36,4 +36,11 @@
 
 .poster-overlay {
   padding: 1rem;
+}
+
+:host::ng-deep {
+  .skeleton-poster-image {
+    width: 33.3333333333vh;
+    aspect-ratio: 2 / 3;
+  }
 }

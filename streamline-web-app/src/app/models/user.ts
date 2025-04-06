@@ -11,3 +11,12 @@ export interface User {
   total_likes: number;
   total_reviews: number;
 }
+export interface UpdateUser {
+  region?: string;
+  language: string[];
+  watch_providers: number[];
+}
+
+export interface UserWatchProviders {
+  watchProviders: number[];
+}

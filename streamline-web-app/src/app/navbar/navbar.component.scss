@@ -16,10 +16,10 @@
 }
 
 .authButtonNavBarContainer {
-  width: 100%;
   display: flex;
   justify-content: right;
   padding-right: 6px;
+  min-width: 150px;
 }
 
 .authButtonContainer {
@@ -30,8 +30,8 @@
 
 .navigation {
   height: 60px;
-  display: grid;
-  grid-template-columns: 1fr auto minmax(227px, 1fr);
+  display: flex;
+  flex-direction: row;
   position: sticky;
   z-index: 5;
   top: 0;
@@ -62,6 +62,7 @@
     display: flex;
     justify-content: center;
     height: 100%;
+    min-width: 340px;
   }
 
   .navigationMenu ul {

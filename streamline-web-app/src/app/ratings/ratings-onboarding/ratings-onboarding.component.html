@@ -29,6 +29,11 @@
 </p-table> -->
 
 <div class="flex flex-column align-items-center gap-3">
+  <p-progressBar
+    showValue="false"
+    [value]="progress"
+    [style]="{ height: '6px', width: '33.3333333333vh' }"
+  />
   <div
     *ngIf="!loading(); else loadingTemplate"
     [ngStyle]="{
@@ -44,10 +49,13 @@
     </div>
   </div>
   <ng-template #loadingTemplate>
+    <p-skeleton width="33.3333333333vh" height="50vh" />
+  </ng-template>
+  <!-- <ng-template #loadingTemplate>
     <div class="spinner-div">
       <p-progressSpinner></p-progressSpinner>
     </div>
-  </ng-template>
+  </ng-template> -->
   <div class="flex-auto">
     <app-star-rating [(rating)]="rating"></app-star-rating>
   </div>

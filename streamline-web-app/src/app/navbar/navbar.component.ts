@@ -5,6 +5,11 @@ import { isEmpty, map, shareReplay } from 'rxjs/operators';
 import { AuthService, User } from '@auth0/auth0-angular';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { OnboardingComponent } from '../onboarding/onboarding.component';
+import { RatingsOnboardingComponent } from '../ratings/ratings-onboarding/ratings-onboarding.component';
+import { MoviesService } from '../services/movies.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-navbar',
@@ -27,11 +32,16 @@ export class NavbarComponent implements OnInit {
   creatingNew = false;
   isNavExpanded = false;
   user: User | undefined | null;
+  search: string = '';
+
+  ref: DynamicDialogRef | undefined;
 
   constructor(
     public authService: AuthService,
     public router: Router,
-    private userService: UserService
+    private userService: UserService,
+    public dialogService: DialogService,
+    private moviesService: MoviesService
   ) {}
 
   ngOnInit() {
@@ -60,11 +70,24 @@ export class NavbarComponent implements OnInit {
     this.isNavExpanded = newValue;
   }
 
+  onSearch() {
+    if (this.search.trim()) {
+      this.router.navigate(['/movies'], {
+        queryParams: { search: this.search },
+      });
+    }
+  }
+
+  showSearchBar(): boolean {
+    const currentUrl = this.router.url;
+    return !currentUrl.startsWith('/movies');
+  }
+
   private createUserIfNew() {
     if (this.user) {
       if (!this.user['_id']) {
         this.userService.createUser().subscribe((response: any) => {
-          this.refresh();
+          this.show();
         });
       } else {
         this.loading = false;
@@ -73,7 +96,7 @@ export class NavbarComponent implements OnInit {
       this.authService.user$.subscribe((response: User | undefined | null) => {
         if (response != undefined && response != null && !response['_id']) {
           this.userService.createUser().subscribe((response: any) => {
-            this.refresh();
+            this.show();
           });
         } else {
           this.loading = false;
@@ -84,5 +107,32 @@ export class NavbarComponent implements OnInit {
 
   private refresh(): void {
     window.location.reload();
+  }
+
+  show() {
+    this.ref = this.dialogService.open(RatingsOnboardingComponent, {
+      header: 'Rate Movies',
+      width: '100%',
+      height: '100%',
+      resizable: false,
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      draggable: false,
+      closable: false,
+      closeOnEscape: false,
+    });
+
+    this.ref.onClose.subscribe(() => {
+      console.log('Dialog closed');
+      this.moviesService.createRecommendation().subscribe({
+        next: () => {
+          console.log('Recommendation created successfully');
+        },
+        error: (err) => {
+          console.error('Error toggling watch:', err);
+        },
+      });
+      this.refresh();
+    });
   }
 }

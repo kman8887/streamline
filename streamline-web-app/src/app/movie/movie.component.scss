@@ -6,9 +6,11 @@
 .hero-image {
   background-size: cover;
   background-repeat: no-repeat;
-  min-height: 50vh;
   display: flex;
   background-position: center;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-height: 60vh;
 }
 
 .hero-gradient {

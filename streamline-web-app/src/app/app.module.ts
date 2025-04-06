@@ -45,7 +45,6 @@ import { UserService } from './services/user.service';
 import { QueryParamBuilderService } from './services/queryParamBuilder.service';
 import { ReviewAddEditComponent } from './reviews/review-add-edit/review-add-edit.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ReactionCountPipe } from './movie/reaction-count.pipe';
@@ -65,6 +64,27 @@ import { ReviewTableComponent } from './reviews/review-table/review-table.compon
 import { HomepageComponent } from './homepage/homepage.component';
 import { CarouselModule } from 'primeng/carousel';
 import { CarouselCardComponent } from './carousel-card/carousel-card.component';
+import { SkeletonModule } from 'primeng/skeleton';
+import { GalleriaModule } from 'primeng/galleria';
+import { MatchBadgeComponent } from './common/match-badge/match-badge.component';
+import { WatchlistButtonComponent } from './common/watchlist-button/watchlist-button.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TooltipModule } from 'primeng/tooltip';
+import { WatchlistComponent } from './watchlist/watchlist.component';
+import { WatchlistcardComponent } from './watchlist/watchlistcard/watchlistcard.component';
+import { ListboxModule } from 'primeng/listbox';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { SettingsComponent } from './settings/settings.component';
+import { OnboardingComponent } from './onboarding/onboarding.component';
+import { StepperModule } from 'primeng/stepper';
+import { StepsModule } from 'primeng/steps';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { PasswordModule } from 'primeng/password';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -89,6 +109,12 @@ import { CarouselCardComponent } from './carousel-card/carousel-card.component';
     ReviewTableComponent,
     HomepageComponent,
     CarouselCardComponent,
+    MatchBadgeComponent,
+    WatchlistButtonComponent,
+    WatchlistComponent,
+    WatchlistcardComponent,
+    SettingsComponent,
+    OnboardingComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -98,26 +124,39 @@ import { CarouselCardComponent } from './carousel-card/carousel-card.component';
     MatToolbarModule,
     MatButtonModule,
     MatButtonToggleModule,
+    ToastModule,
     MatSidenavModule,
     MatIconModule,
     MatListModule,
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
+    StepperModule,
+    SkeletonModule,
+    TooltipModule,
+    ProgressBarModule,
     MatTableModule,
+    PasswordModule,
+    MatTooltipModule,
+    FloatLabelModule,
     MatPaginatorModule,
     MatSortModule,
     FormsModule,
     ReactiveFormsModule,
+    InputIconModule,
+    IconFieldModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     TagModule,
+    ListboxModule,
+    GalleriaModule,
     RatingModule,
     ButtonModule,
     PaginatorModule,
     MultiSelectModule,
+    StepsModule,
     CarouselModule,
     InputTextModule,
     SliderModule,
@@ -155,12 +194,24 @@ import { CarouselCardComponent } from './carousel-card/carousel-card.component';
             httpMethod: HttpMethod.Get,
           },
           {
+            uri: 'http://localhost:5000/api/v1.0/recommendation/generate',
+            httpMethod: HttpMethod.Get,
+          },
+          {
+            uri: 'http://localhost:5000/api/v1.0/movies/watchlist',
+            httpMethod: HttpMethod.Get,
+          },
+          {
             uri: 'http://localhost:5000/api/v1.0/users',
             httpMethod: HttpMethod.Post,
           },
           {
             uri: 'http://localhost:5000/api/v1.0/users/*',
             httpMethod: HttpMethod.Post,
+          },
+          {
+            uri: 'http://localhost:5000/api/v1.0/users/*',
+            httpMethod: HttpMethod.Put,
           },
           {
             uri: 'http://localhost:5000/api/v1.0/users/*',
@@ -190,6 +241,8 @@ import { CarouselCardComponent } from './carousel-card/carousel-card.component';
   providers: [
     MoviesService,
     UserService,
+    DialogService,
+    MessageService,
     QueryParamBuilderService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
     {

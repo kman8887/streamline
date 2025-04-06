@@ -6,21 +6,25 @@ import {
   MovieFiltersResponse,
   MovieRecommendationResponse,
   MoviesResponse,
+  WatchListResponse,
 } from '../models/moviesResponse';
 import { ReviewsResponse } from '../models/reviewsResponse';
 import { QueryParamBuilderService } from './queryParamBuilder.service';
+import { filterOption } from '../movie-table/movie-table.component';
 
 const API_URL = 'http://localhost:5000/api/v1.0/';
 
 export interface MoviesQueryParams {
-  genre?: string[];
+  genre?: number[];
   releaseDates?: Date[];
-  tags?: string[];
+  tags?: number[];
   search?: string;
-  watchProviders?: string[];
+  watchProviders?: number[];
   sort?: string;
   ratings?: number[];
-  language: string;
+  pagination: Pagination;
+}
+export interface WatchListQueryParams {
   pagination: Pagination;
 }
 
@@ -54,6 +58,17 @@ export class MoviesService {
     });
   }
 
+  getMoviesFromWatchList(
+    queryParams: WatchListQueryParams
+  ): Observable<WatchListResponse> {
+    return this.httpClient.get<WatchListResponse>(
+      API_URL + 'movies/watchlist',
+      {
+        params: this.queryParamBuilder.buildWatchListParams(queryParams),
+      }
+    );
+  }
+
   // Would it make sense to have a hardcoded list of movies for the onboarding. + 3 From most popular right now. Or maybe 3 most popular from current year - 1
   findOnboardingMovies(pageNumber: number): Observable<OnboardingMovie[]> {
     return this.httpClient.get<OnboardingMovie[]>(
@@ -70,6 +85,12 @@ export class MoviesService {
     );
   }
 
+  getWatchProviders(): Observable<filterOption[]> {
+    return this.httpClient.get<filterOption[]>(
+      API_URL + 'movies/watch-providers'
+    );
+  }
+
   getRecommendation(
     user_id: string,
     movie_id: string
@@ -81,6 +102,12 @@ export class MoviesService {
     return this.httpClient.get<MovieRecommendationResponse>(url, {
       params: this.queryParamBuilder.buildRecommendationParams(movie_id),
     });
+  }
+
+  createRecommendation(): Observable<any> {
+    const url = `${API_URL}recommendation/generate`;
+
+    return this.httpClient.get<any>(url);
   }
 
   // Think idea for review was, reviews have ratings, in the row.
@@ -96,6 +123,14 @@ export class MoviesService {
   toggleMovieWatched(movieId: string, isWatched: boolean): Observable<any> {
     const url = `${API_URL}movies/${movieId}/watch`;
     return this.httpClient.post(url, { isWatched });
+  }
+
+  toggleMovieWatchList(
+    movieId: string,
+    isInWatchList: boolean
+  ): Observable<any> {
+    const url = `${API_URL}movies/${movieId}/watchList`;
+    return this.httpClient.post(url, { isInWatchList });
   }
 
   getReviews(

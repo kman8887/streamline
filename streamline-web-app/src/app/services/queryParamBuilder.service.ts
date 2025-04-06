@@ -2,6 +2,7 @@ import {
   MoviesQueryParams,
   Pagination,
   ReviewsQueryParams,
+  WatchListQueryParams,
 } from './movies.service';
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
@@ -56,9 +57,9 @@ export class QueryParamBuilderService {
       params = params.append('sort', queryParams.sort);
     }
 
-    if (queryParams.language) {
-      params = params.append('language', queryParams.language);
-    }
+    // if (queryParams.language) {
+    //   params = params.append('language', queryParams.language);
+    // }
 
     if (queryParams.pagination) {
       params = this.buildPaginationParams(queryParams.pagination, params);
@@ -104,6 +105,16 @@ export class QueryParamBuilderService {
     let params = new HttpParams();
 
     params = this.buildPaginationParams(pagination, params);
+
+    return params;
+  }
+
+  buildWatchListParams(queryParams: WatchListQueryParams): HttpParams {
+    let params = new HttpParams();
+
+    if (queryParams.pagination) {
+      params = this.buildPaginationParams(queryParams.pagination, params);
+    }
 
     return params;
   }

@@ -38,6 +38,12 @@
               (toggleLike)="onMovieLikeToggle($event)"
             ></app-like-button>
           </div>
+          <div>
+            <app-watchlist-button
+              [isInWatchList]="movie.is_in_watchlist"
+              (toggleWatchList)="onMovieWatchListToggle($event)"
+            ></app-watchlist-button>
+          </div>
         </div>
       </div>
     </div>

@@ -2,6 +2,8 @@
   mat-icon-button
   (click)="onToggleLike()"
   [color]="isLiked ? 'primary' : 'surface'"
+  pTooltip="Add/Remove Like"
+  tooltipPosition="top"
 >
   <mat-icon>{{ isLiked ? "favorite" : "favorite_border" }}</mat-icon>
 </button>
