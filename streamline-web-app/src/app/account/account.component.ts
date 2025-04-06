@@ -21,7 +21,7 @@ import { ReviewTableData } from '../reviews/review-table/review-table.component'
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrl: './account.component.scss',
+  styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent {
   user: User | undefined;
