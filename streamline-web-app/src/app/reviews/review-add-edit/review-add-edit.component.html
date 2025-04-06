@@ -1,0 +1,42 @@
+<div class="flex justify-content-center">
+  <p-button (click)="showDialog()" [label]="getLabel()"></p-button>
+  <p-dialog
+    [header]="getLabel()"
+    [(visible)]="visible"
+    [modal]="true"
+    [dismissableMask]="false"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [resizable]="false"
+    (onHide)="close()"
+  >
+    <div class="flex py-2 justify-content-center">
+      <form
+        class="flex flex-column gap-5 p-fluid w-full"
+        (ngSubmit)="submit(form)"
+        [formGroup]="form"
+      >
+        <div class="flex-auto">
+          <label for="star-rating">Rating</label>
+          <p-rating id="star-rating" formControlName="rating" />
+        </div>
+        <span class="p-float-label">
+          <textarea
+            id="float-input"
+            rows="7"
+            pInputTextarea
+            formControlName="text"
+            style="width: 100%; max-width: 100%"
+          ></textarea>
+          <label for="float-input">Review</label>
+        </span>
+        <p-button
+          type="submit"
+          [disabled]="!form.valid"
+          label="Submit"
+          icon="pi pi-check"
+        ></p-button>
+      </form>
+    </div>
+  </p-dialog>
+</div>

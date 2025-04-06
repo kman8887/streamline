@@ -1,0 +1,11 @@
+<button
+  mat-icon-button
+  (click)="onToggleWatchList()"
+  [color]="isInWatchList ? 'primary' : 'surface'"
+  pTooltip="Add/Remove Movie from Watchlist"
+  tooltipPosition="top"
+>
+  <mat-icon>{{
+    isInWatchList ? "playlist_add_check" : "playlist_add"
+  }}</mat-icon>
+</button>

@@ -1,0 +1,56 @@
+<div class="outer-card">
+  <p-galleria
+    *ngIf="heroMovies; else loadingTemplate"
+    [value]="heroMovies"
+    [responsiveOptions]="responsiveOptionsHero"
+    [showItemNavigators]="true"
+    [circular]="true"
+    [showThumbnails]="false"
+  >
+    <ng-template pTemplate="item" let-movie>
+      <div
+        [ngStyle]="{
+          'background-image':
+            'url(' + getMovieBackdropUrl(movie.backdrop_path) + ')'
+        }"
+        [routerLink]="['/movies', movie.id]"
+        class="hero-image"
+      >
+        <div class="hero-gradient">
+          <div class="hero-overlay">
+            <div class="font-medium text-3xl text-900 mb-2">
+              {{ movie.title }}
+            </div>
+            <div class="flex align-items-center gap-3">
+              <div>{{ movie.release_date | date : "yyyy" }}</div>
+              <app-match-badge [movie]="movie"></app-match-badge>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-galleria>
+  <ng-template #loadingTemplate>
+    <p-skeleton width="100%" height="80vh" />
+  </ng-template>
+  <div *ngFor="let movie of movies" class="card mt-3">
+    <span class="text-500 ml-7">{{ movie.title }}</span>
+    <p-carousel
+      *ngIf="!loading; else loadingTemplate"
+      [value]="movie.movies"
+      [numVisible]="5"
+      [numScroll]="5"
+      [circular]="true"
+      [responsiveOptions]="responsiveOptions"
+    >
+      <ng-template let-movie pTemplate="item">
+        <app-carousel-card [movie]="movie"></app-carousel-card>
+      </ng-template>
+    </p-carousel>
+    <ng-template #loadingTemplate>
+      <div class="spinner-div carousel">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
+    </ng-template>
+  </div>
+</div>

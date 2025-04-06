@@ -1,0 +1,120 @@
+<div class="card">
+  <div class="flex gap-3">
+    <div class="tableOuter w-full">
+      <div
+        class="tableHeader flex flex-column md:flex-row md:justify-content-between"
+      >
+        <p-dropdown
+          [options]="sortOptions"
+          [(ngModel)]="sortKey"
+          placeholder="Sort By Popularity"
+          (onChange)="onSortChange($event)"
+          styleClass="mb-2 md:mb-0"
+        ></p-dropdown>
+        <span class="p-input-icon-left w-9 sm:w-16rem xl:w-20rem">
+          <i class="pi pi-search"></i>
+          <input
+            type="search"
+            pInputText
+            placeholder="Search by title, cast, or crew"
+            [(ngModel)]="queryParams.search"
+            class="w-full"
+            (keydown.enter)="onFilterChange()"
+          />
+        </span>
+      </div>
+      <div
+        *ngIf="!loading(); else loadingTemplate"
+        class="grid grid-nogutter tableContent"
+      >
+        <div
+          class="col-12 md:col-6 lg:col-4 xl:col-3 xxl:col-2 xxxl:col-1"
+          *ngFor="let movie of movies()"
+        >
+          <app-movie-card [movie]="movie"></app-movie-card>
+        </div>
+      </div>
+      <div
+        class="no-movies-text flex align-items-center m-auto w-full justify-content-center p-8"
+        *ngIf="movies().length == 0 && !loading()"
+      >
+        No Movies Match The Filters
+      </div>
+      <ng-template #loadingTemplate>
+        <div class="spinner-div">
+          <p-progressSpinner></p-progressSpinner>
+        </div>
+      </ng-template>
+      <p-paginator
+        *ngIf="!loading()"
+        (onPageChange)="onPageChange($event)"
+        [first]="first"
+        [rows]="queryParams.pagination.pageSize"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+      ></p-paginator>
+    </div>
+    <div class="flex flex-column gap-3 tableFilters">
+      <p-multiSelect
+        [options]="genresFilterOptions()"
+        optionLabel="name"
+        optionValue="id"
+        (onChange)="onFilterChange()"
+        [(ngModel)]="queryParams.genre"
+        placeholder="Filter By Genre"
+        class="w-full max-w-17rem w-17rem"
+      ></p-multiSelect>
+      <p-multiSelect
+        [options]="watchProvidersFilterOptions()"
+        optionLabel="name"
+        optionValue="id"
+        (onChange)="onFilterChange()"
+        [(ngModel)]="queryParams.watchProviders"
+        placeholder="Filter By Watch Provider"
+        class="w-full max-w-17rem w-17rem"
+      ></p-multiSelect>
+      <p-multiSelect
+        [options]="tagsFilterOptions()"
+        optionLabel="name"
+        optionValue="id"
+        (onChange)="onFilterChange()"
+        [(ngModel)]="queryParams.tags"
+        placeholder="Filter By Tag"
+        [virtualScroll]="true"
+        [virtualScrollItemSize]="46"
+        class="multiselect-custom-virtual-scroll w-full max-w-17rem w-17rem"
+      ></p-multiSelect>
+      <div class="w-full priceSlider">
+        <div class="priceLabel mb-2">
+          {{ ratingSliderValues | ratingsFilter }}
+        </div>
+        <p-slider
+          [(ngModel)]="ratingSliderValues"
+          [max]="10"
+          [min]="0"
+          [range]="true"
+          [step]="1"
+          class="w-full"
+          (onSlideEnd)="onRatingFilterChange($event)"
+        ></p-slider>
+      </div>
+      <div class="flex-auto">
+        <label for="daterangepicker" class="font-bold block mb-2">
+          Release Date
+        </label>
+        <p-calendar
+          [(ngModel)]="queryParams.releaseDates"
+          inputId="daterangepicker"
+          [showIcon]="true"
+          class="w-full"
+          placeholder="20/08/2025"
+          selectionMode="range"
+          [showButtonBar]="true"
+          (onSelect)="onDateSelectChange($event)"
+          (onClearClick)="onDateSelectChange($event)"
+        ></p-calendar>
+      </div>
+      <span class="w-full m-auto records">{{ totalRecords }} Results</span>
+    </div>
+  </div>
+</div>

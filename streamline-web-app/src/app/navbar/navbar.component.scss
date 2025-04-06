@@ -1,0 +1,244 @@
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.spinner-div {
+  height: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.mat-drawer-content {
+  z-index: 2 !important;
+}
+
+.authButtonNavBarContainer {
+  display: flex;
+  justify-content: right;
+  padding-right: 6px;
+  min-width: 150px;
+}
+
+.authButtonContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.navigation {
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  justify-content: space-between;
+  align-items: center;
+
+  .brandLogoDiv {
+    width: fit-content;
+    height: inherit;
+  }
+
+  .brandLogoDiv a {
+    padding: 6px;
+    display: block;
+    height: inherit;
+  }
+
+  .largeBrandLogo {
+    height: 100%;
+  }
+
+  .smallBrandLogo {
+    display: none;
+    height: 100%;
+  }
+
+  .navigationMenu {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    min-width: 340px;
+  }
+
+  .navigationMenu ul {
+    display: flex;
+    padding: 0;
+    height: auto;
+    justify-content: center;
+    margin: 0;
+  }
+
+  .navigationMenu li {
+    list-style-type: none;
+  }
+
+  .navBarLink {
+    font-size: 20px;
+    height: 100%;
+    text-align: center;
+    padding: 0px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .accountButton {
+    justify-self: right;
+  }
+
+  .hamburger {
+    border: 0;
+    height: 40px;
+    width: 40px;
+    padding: 0.5rem;
+    border-radius: 50%;
+    background-color: #447399;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: none;
+  }
+
+  .hamburger:hover {
+    background-color: #6396bf;
+  }
+
+  .chevron::before {
+    border-style: solid;
+    border-width: 0.25em 0.25em 0 0;
+    content: "";
+    display: inline-block;
+    height: 0.45em;
+    left: 0.15em;
+    position: relative;
+    top: 0;
+    transform: rotate(135deg);
+    width: 0.45em;
+    margin-left: 2px;
+    font-size: 16px;
+    vertical-align: middle;
+    margin-bottom: 5px;
+  }
+
+  @media screen and (max-width: 1100px) {
+    .largeBrandLogo {
+      display: none;
+    }
+
+    .smallBrandLogo {
+      display: block;
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    .largeBrandLogo {
+      display: block;
+    }
+
+    .smallBrandLogo {
+      display: none;
+    }
+
+    .chevron.expanded:before {
+      top: 0.15em;
+      transform: rotate(-45deg);
+    }
+
+    .hamburger {
+      display: block;
+    }
+
+    .navigationMenu ul {
+      display: none;
+    }
+
+    .navigationMenu ul {
+      width: 100%;
+      border-top: 1px solid black;
+    }
+
+    .navBarLink {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .dropdownContent.expanded {
+      display: block;
+    }
+
+    .navigationMenu {
+      width: 100%;
+      border-bottom: black solid 1px;
+    }
+
+    .navBtn {
+      width: 100%;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .dropdown {
+      width: 100%;
+    }
+
+    .dropdownContent {
+      width: 100%;
+      position: relative;
+    }
+
+    .dropdownLink {
+      padding: 8px 10px !important;
+    }
+
+    .left {
+      text-align: right;
+    }
+
+    .right {
+      text-align: left;
+    }
+  }
+  @media screen and (max-width: 350px) {
+    .brandLogoDiv a {
+      line-height: 60px;
+      display: inline-block;
+    }
+
+    .largeBrandLogo {
+      width: 240px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .hamburger {
+      right: 7px;
+    }
+  }
+}
+
+#topNavBarDiv.modalOpen {
+  z-index: 1;
+}
+
+@media screen and (max-width: 800px) {
+  .navigation {
+    display: block;
+  }
+
+  .navigation.expanded .navigationMenu ul {
+    display: block;
+  }
+
+  .navigation.expanded .accountMenu {
+    display: inline-block;
+  }
+}

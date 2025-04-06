@@ -1,0 +1,14 @@
+<div class="flex flex-column p-1 gap-2 poster">
+  <img
+    class="poster shadow-2 block m-auto border-round"
+    [src]="getMoviePosterUrl(movie.poster_path)"
+    [alt]="movie.title"
+    [routerLink]="['/movies', movie.id]"
+  />
+  <div
+    class="flex flex-row justify-content-between align-items-center gap-4 p-1"
+  >
+    <div>{{ movie.release_date | date : "yyyy" }}</div>
+    <app-match-badge [movie]="movie"></app-match-badge>
+  </div>
+</div>

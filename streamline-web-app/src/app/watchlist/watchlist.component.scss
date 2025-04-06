@@ -1,0 +1,37 @@
+.outer-card {
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.card {
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.tableOuter {
+  border-radius: 0.5rem;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.tableHeader {
+  border-width: 1px;
+  padding: 1rem 1rem;
+  font-weight: 700;
+  border-radius: 0.5rem;
+}
+
+.tableContent {
+  border: 0 none;
+  padding: 1rem;
+}
+
+.cart {
+  min-width: 140px;
+}
+
+.records {
+  text-align: center;
+}

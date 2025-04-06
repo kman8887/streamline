@@ -1,0 +1,70 @@
+<!-- <div class="flex justify-end mt-1 mb-4">
+    <p-button icon="pi pi-external-link" label="Nested Dialog" [outlined]="true" severity="success" (click)="showInfo()" />
+</div>
+<p-table [value]="products" responsiveLayout="scroll" [rows]="5" [responsive]="true">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="code">Code</th>
+            <th pSortableColumn="name">Name</th>
+            <th pSortableColumn="year">Image</th>
+            <th pSortableColumn="price">Category</th>
+            <th pSortableColumn="inventoryStatus">Quantity</th>
+            <th style="width:4em"></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+        <tr>
+            <td>{{ product.code }}</td>
+            <td>{{ product.name }}</td>
+            <td><img src="https://primefaces.org/cdn/primeng/images/demo/product/{{ product.image }}" [alt]="product.image" class="w-16 h-16 shadow" /></td>
+            <td>{{ product.category }}</td>
+            <td>
+                {{ product.quantity }}
+            </td>
+            <td>
+                <p-button type="button" [text]="true" [rounded]="true" icon="pi pi-plus" (click)="selectProduct(product)" />
+            </td>
+        </tr>
+    </ng-template>
+</p-table> -->
+
+<div class="flex flex-column align-items-center gap-3">
+  <p-progressBar
+    showValue="false"
+    [value]="progress"
+    [style]="{ height: '6px', width: '33.3333333333vh' }"
+  />
+  <div
+    *ngIf="!loading(); else loadingTemplate"
+    [ngStyle]="{
+      'background-image': 'url(' + getMoviePosterUrl(movie.poster_path) + ')'
+    }"
+    class="poster-image"
+  >
+    <div class="poster-gradient">
+      <div class="poster-overlay">
+        <div class="font-medium text-3xl text-900">{{ movie.title }}</div>
+        <div>{{ movie.release_date | date : "yyyy" }}</div>
+      </div>
+    </div>
+  </div>
+  <ng-template #loadingTemplate>
+    <p-skeleton width="33.3333333333vh" height="50vh" />
+  </ng-template>
+  <!-- <ng-template #loadingTemplate>
+    <div class="spinner-div">
+      <p-progressSpinner></p-progressSpinner>
+    </div>
+  </ng-template> -->
+  <div class="flex-auto">
+    <app-star-rating [(rating)]="rating"></app-star-rating>
+  </div>
+  <div class="flex flex-row align-items-center gap-3">
+    <p-button severity="secondary" (click)="skipMovie()" label="Skip Movie" />
+    <p-button
+      [disabled]="isRateMovieDisabled()"
+      (click)="rateMovie()"
+      label="Submit Rating"
+    />
+  </div>
+</div>

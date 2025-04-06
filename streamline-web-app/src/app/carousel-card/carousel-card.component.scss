@@ -1,0 +1,52 @@
+.genreChip {
+  display: inline-block;
+  line-height: 19px;
+  padding: 0 7px;
+  box-shadow: none;
+  border-radius: 2px;
+  cursor: pointer;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:host ::ng-deep {
+  .p-chip-text {
+    font-size: x-small;
+  }
+
+  .very-highly-rated {
+    background-color: #00b300;
+    color: #ffffff;
+  }
+
+  .highly-rated {
+    background-color: #5b9c08;
+    color: #ffffff;
+  }
+
+  .mixed {
+    background-color: #88900c;
+    color: #ffffff;
+  }
+
+  .badly-rated {
+    background-color: #f97316;
+    color: #ffffff;
+  }
+
+  .very-badly-rated {
+    background-color: #b71c1c;
+    color: #ffffff;
+  }
+}
+
+.match {
+  border-radius: 5px;
+  padding: 0 0.1rem;
+}
+
+.poster {
+  max-width: 200px;
+}

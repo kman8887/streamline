@@ -1,0 +1,223 @@
+<div class="card" *ngIf="movie">
+  <div
+    [ngStyle]="{
+      'background-image':
+        'url(' + getMovieBackdropUrl(movie.backdrop_path) + ')'
+    }"
+    class="hero-image"
+  >
+    <div class="hero-gradient">
+      <div class="hero-overlay">
+        <div class="font-medium text-3xl text-900">{{ movie.title }}</div>
+        <div class="flex align-items-center gap-3">
+          <div>{{ movie.release_date | date : "yyyy" }}</div>
+          <div>R</div>
+          <div>{{ movie.runtime | time }}</div>
+        </div>
+        <div class="flex align-items-center gap-3">
+          <span
+            *ngIf="recommendationScore"
+            class="match"
+            [ngClass]="getRecommendationStyling(recommendationScore)"
+          >
+            {{ getRecommendationPercentage(recommendationScore) }} Match
+          </span>
+          <p-tag
+            [value]="getVoteAveragePercentage(movie.vote_average)"
+            [styleClass]="getVoteAverageStyling(movie.vote_average)"
+          ></p-tag>
+          <div>
+            <app-watch-button
+              [isWatched]="isMovieWatched"
+              (toggleWatch)="onMovieWatchToggle($event)"
+            ></app-watch-button>
+          </div>
+          <div>
+            <app-like-button
+              [isLiked]="isMovieLiked"
+              (toggleLike)="onMovieLikeToggle($event)"
+            ></app-like-button>
+          </div>
+          <div>
+            <app-watchlist-button
+              [isInWatchList]="movie.is_in_watchlist"
+              (toggleWatchList)="onMovieWatchListToggle($event)"
+            ></app-watchlist-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="grid nested-grid pt-3">
+    <div class="col-3">
+      <div *ngIf="isUserLoggedIn()" class="container-card p-2 mb-3">
+        <div class="text-500 w-full text-xl">Rate Movie</div>
+        <app-star-rating
+          [(rating)]="rating"
+          (ratingChange)="onRatingChange($event)"
+        ></app-star-rating>
+      </div>
+      <div class="container-card p-2">
+        <div class="text-500 w-full text-xl">Where to Watch</div>
+        <div
+          *ngIf="watchProviders"
+          class="w-full flex align-items-center gap-2 flex-wrap"
+        >
+          <div
+            class="w-full flex align-items-center gap-2 flex-wrap"
+            *ngIf="watchProviders.free.length > 0"
+          >
+            <div class="text-500 w-full font-medium">Free</div>
+            <p-button
+              class="watch-provider-button"
+              *ngFor="let watchProvider of watchProviders.free"
+              [outlined]="true"
+            >
+              <img
+                class="watch-provider-logo"
+                [src]="getLogoUrl(watchProvider.logo_path)"
+              />
+            </p-button>
+          </div>
+          <div
+            class="w-full flex align-items-center gap-2 flex-wrap"
+            *ngIf="watchProviders.ads.length > 0"
+          >
+            <div class="text-500 w-full font-medium">Ads</div>
+            <p-button
+              class="watch-provider-button"
+              *ngFor="let watchProvider of watchProviders.ads"
+              [outlined]="true"
+            >
+              <img
+                class="watch-provider-logo"
+                [src]="getLogoUrl(watchProvider.logo_path)"
+              />
+            </p-button>
+          </div>
+          <div
+            class="w-full flex align-items-center gap-2 flex-wrap"
+            *ngIf="watchProviders.rent.length > 0"
+          >
+            <div class="text-500 w-full font-medium">Rent</div>
+            <p-button
+              class="watch-provider-button"
+              *ngFor="let watchProvider of watchProviders.rent"
+              [outlined]="true"
+            >
+              <img
+                class="watch-provider-logo"
+                [src]="getLogoUrl(watchProvider.logo_path)"
+              />
+            </p-button>
+          </div>
+          <div
+            class="w-full flex align-items-center gap-2 flex-wrap"
+            *ngIf="watchProviders.buy.length > 0"
+          >
+            <div class="text-500 w-full font-medium">Buy</div>
+            <p-button
+              class="watch-provider-button"
+              *ngFor="let watchProvider of watchProviders.buy"
+              [outlined]="true"
+            >
+              <img
+                class="watch-provider-logo"
+                [src]="getLogoUrl(watchProvider.logo_path)"
+              />
+            </p-button>
+          </div>
+          <div
+            class="w-full flex align-items-center gap-2 flex-wrap"
+            *ngIf="watchProviders.stream.length > 0"
+          >
+            <div class="text-500 w-full font-medium">Stream</div>
+            <p-button
+              class="watch-provider-button"
+              *ngFor="let watchProvider of watchProviders.stream"
+              [outlined]="true"
+            >
+              <img
+                class="watch-provider-logo"
+                [src]="getLogoUrl(watchProvider.logo_path)"
+              />
+            </p-button>
+          </div>
+        </div>
+      </div>
+      <div class="container-card mt-3 p-2">
+        <ul class="list-none p-0 m-0">
+          <li class="flex flex-row gap-1 align-items-center flex-wrap">
+            <div class="text-500 w-full text-xl">Tags</div>
+            <div
+              class="text-900 w-full md:w-8 flex align-items-center gap-2 flex-wrap"
+            >
+              <p-chip
+                *ngFor="let tag of movie?.tags"
+                label="{{ tag.name }}"
+              ></p-chip>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="grid">
+        <div class="col-8">
+          <li class="flex align-items-center py-3 px-2 flex-wrap">
+            <div class="text-900 w-full pb-2">
+              {{ movie.overview }}
+            </div>
+            <div class="text-500 w-6 font-medium">
+              Director:
+              <span class="pl-1 pr-2 text-900">{{
+                movie.director | people
+              }}</span>
+            </div>
+
+            <div class="text-500 w-6 font-medium">
+              Writer:
+              <span class="pl-1 text-900">{{ movie.writer | people }}</span>
+            </div>
+
+            <div class="text-500 w-6 font-medium">
+              Starring:
+              <span class="pl-1 text-900">{{ movie.top_cast | people }}</span>
+            </div>
+          </li>
+        </div>
+        <div class="col-4">
+          <ul class="list-none p-0 m-0">
+            <li
+              class="flex flex-row gap-1 align-items-center py-3 px-2 flex-wrap"
+            >
+              <div class="text-500 w-6 md:w-2 font-medium">Genre</div>
+              <div
+                class="text-900 w-full flex align-items-center gap-2 flex-wrap"
+              >
+                <p-chip
+                  class="text-sm"
+                  *ngFor="let genre of movie?.genres"
+                  label="{{ genre.name }}"
+                ></p-chip>
+              </div>
+            </li>
+            <li
+              class="flex flex-row gap-1 align-items-center py-3 px-2 flex-wrap"
+            >
+              <div class="text-500 w-6 md:w-2 font-medium">Release date</div>
+              <div class="text-500 w-6 md:w-2 font-medium"></div>
+              <span>{{ movie.release_date | date : "mediumDate" }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="col-12">
+          <app-review-table
+            *ngIf="reviewTableData"
+            [data]="reviewTableData"
+          ></app-review-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+.match {
+  border-radius: 5px;
+  padding: 0 0.1rem;
+}
+
+:host ::ng-deep {
+  .very-highly-rated {
+    background-color: #00b300;
+    color: #ffffff;
+  }
+
+  .highly-rated {
+    background-color: #5b9c08;
+    color: #ffffff;
+  }
+
+  .mixed {
+    background-color: #88900c;
+    color: #ffffff;
+  }
+
+  .badly-rated {
+    background-color: #f97316;
+    color: #ffffff;
+  }
+
+  .very-badly-rated {
+    background-color: #b71c1c;
+    color: #ffffff;
+  }
+}

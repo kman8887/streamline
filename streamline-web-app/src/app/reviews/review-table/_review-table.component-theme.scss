@@ -1,0 +1,42 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@mixin color($theme) {
+  .tableHeader {
+    background: var(--sys-surface-container);
+    color: var(--sys-on-surface);
+    border: 1px solid var(--sys-outline-variant) b;
+  }
+
+  .tableContent {
+    background: var(--sys-surface-container-low);
+    color: var(--sys-on-surface);
+  }
+
+  .tableOuter {
+    border: 1px solid var(--sys-outline-variant);
+  }
+}
+
+@mixin typography($theme) {
+  .card {
+    // Get the large headline font from the theme.
+    font-family: var(--sys-body-small-font);
+  }
+
+  .p-component {
+    font-family: var(--sys-body-small-font);
+    // font: mat.get-theme-typography($theme, title-medium, font);
+    // need to add font family
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+
+  @if mat.theme-has($theme, typography) {
+    @include typography($theme);
+  }
+}

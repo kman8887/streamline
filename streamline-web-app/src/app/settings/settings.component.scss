@@ -1,0 +1,27 @@
+.outer-card {
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.card {
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  max-width: 600px;
+}
+
+.settings-outer-div {
+  min-width: 200px;
+  max-width: 400px;
+  width: 100%;
+}
+
+:host ::ng-deep {
+  .p-multiselect {
+    width: 100%;
+  }
+
+  .p-dropdown {
+    width: 100%;
+  }
+}

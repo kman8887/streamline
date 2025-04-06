@@ -1,0 +1,23 @@
+<div class="star-rating">
+  <div
+    *ngFor="let star of stars"
+    class="star"
+    [ngClass]="{
+      'star-full': rating >= star,
+      'star-half': rating >= star - 1 && rating < star,
+      'star-empty': rating < star - 1
+    }"
+    [class.read-only]="readOnly"
+    (click)="selectStar($event, star)"
+  >
+    <i class="material-icons">
+      {{
+        rating >= star
+          ? "star"
+          : rating >= star - 1
+          ? "star_half"
+          : "star_outline"
+      }}
+    </i>
+  </div>
+</div>

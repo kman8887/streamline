@@ -1,0 +1,40 @@
+.tableHeader {
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 700;
+}
+
+.tableOuter {
+  border-radius: 0.5rem;
+  overflow: auto;
+}
+
+.priceLabel {
+  font-size: 1rem;
+  font-weight: normal;
+  display: block;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.priceSlider {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  background: #1e1e1e;
+  border: 1px solid hsla(0, 0%, 100%, 0.3);
+  border-radius: 4px;
+}
+
+.tableContent {
+  border: 0 none;
+  padding: 0;
+}
+
+.records {
+  text-align: end;
+  display: block;
+}

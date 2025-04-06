@@ -1,0 +1,40 @@
+<div class="outer-card">
+  <div class="card flex flex-column">
+    <div class="tableOuter w-full">
+      <div
+        class="flex align-items-center justify-content-center gap-2 tableHeader w-full"
+      >
+        <div class="text-xl font-bold text-900 text-overflow-ellipsis">
+          My Watchlist
+        </div>
+      </div>
+      <div *ngIf="!loading(); else loadingTemplate" class="grid tableContent">
+        <div
+          class="col-12 md:col-6 lg:col-4 xl:col-3 xxl:col-2 xxxl:col-1"
+          *ngFor="let movie of movies()"
+        >
+          <app-watchlistcard [movie]="movie"></app-watchlistcard>
+        </div>
+      </div>
+      <div
+        class="no-movies-text flex align-items-center m-auto w-full justify-content-center p-8"
+        *ngIf="movies().length == 0 && !loading()"
+      >
+        Nothing in the Watchlist
+      </div>
+      <ng-template #loadingTemplate>
+        <div class="spinner-div">
+          <p-progressSpinner></p-progressSpinner>
+        </div>
+      </ng-template>
+      <p-paginator
+        *ngIf="!loading()"
+        (onPageChange)="onPageChange($event)"
+        [first]="first"
+        [rows]="queryParams.pagination.pageSize"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+      ></p-paginator>
+    </div>
+  </div>
+</div>

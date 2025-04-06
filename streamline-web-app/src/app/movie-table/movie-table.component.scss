@@ -1,0 +1,108 @@
+.card {
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.tableHeader {
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 700;
+}
+
+.tableOuter {
+  border-radius: 0.5rem;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.tableFilters {
+  padding: 1rem 1rem;
+  font-weight: 700;
+  height: fit-content;
+  border-radius: 0.5rem;
+}
+
+.priceLabel {
+  font-size: 1rem;
+  font-weight: normal;
+  display: block;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tableContent {
+  border: 0 none;
+  padding: 0;
+}
+
+.cart {
+  min-width: 140px;
+}
+
+.records {
+  text-align: center;
+}
+
+.priceSlider {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media screen and (min-width: 1600px) {
+  .xxl\:col-2 {
+    flex: 0 0 auto;
+    padding: 0.5rem;
+    width: 16.6666666667%;
+  }
+}
+
+@media screen and (min-width: 2000px) {
+  .xxxl\:col-1 {
+    flex: 0 0 auto;
+    padding: 0.5rem;
+    width: 8.33333333333%;
+  }
+}
+
+:host ::ng-deep {
+  .p-multiselect {
+    width: 100%;
+  }
+  .p-calendar {
+    width: 100%;
+  }
+
+  .p-chip-text {
+    font-size: x-small;
+  }
+
+  .very-highly-rated {
+    background-color: #00b300;
+    color: #ffffff;
+  }
+
+  .highly-rated {
+    background-color: #5b9c08;
+    color: #ffffff;
+  }
+
+  .mixed {
+    background-color: #88900c;
+    color: #ffffff;
+  }
+
+  .badly-rated {
+    background-color: #f97316;
+    color: #ffffff;
+  }
+
+  .very-badly-rated {
+    background-color: #b71c1c;
+    color: #ffffff;
+  }
+}

@@ -1,0 +1,14 @@
+<div class="flex flex-row justify-content-between align-items-center gap-4 p-1">
+  <span
+    *ngIf="recommendationScore"
+    class="match"
+    [ngClass]="recommendationStyling"
+  >
+    {{ recommendationScore }} Match
+  </span>
+  <p-tag
+    *ngIf="!recommendationScore"
+    [value]="getVoteAveragePercentage(movie.vote_average)"
+    [styleClass]="getVoteAverageStyling(movie.vote_average)"
+  ></p-tag>
+</div>

@@ -1,0 +1,24 @@
+/* Lexend-regular - latin-ext_latin */
+@font-face {
+  font-family: "Lexend";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Lexend"), local("Lexend-Regular"),
+    url("./fonts/Lexend-Regular.ttf") format("ttf");
+}
+/* Lexend-500 - latin-ext_latin */
+@font-face {
+  font-family: "Lexend";
+  font-style: normal;
+  font-weight: 500;
+  src: local("Lexend Medium"), local("Lexend-Medium"),
+    url("./fonts/Lexend-Medium.ttf") format("ttf");
+}
+/* Lexend-700 - latin-ext_latin */
+@font-face {
+  font-family: "Lexend";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Lexend Bold"), local("Lexend-Bold"),
+    url("./fonts/Lexend-Bold.ttf") format("ttf");
+}

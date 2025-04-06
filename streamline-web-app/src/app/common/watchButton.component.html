@@ -1,0 +1,9 @@
+<button
+  mat-icon-button
+  (click)="onToggleWatch()"
+  [color]="isWatched ? 'primary' : 'surface'"
+  pTooltip="Add/Remove Seen"
+  tooltipPosition="top"
+>
+  <mat-icon>{{ isWatched ? "visibility" : "visibility_border" }}</mat-icon>
+</button>
