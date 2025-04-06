@@ -1,4 +1,10 @@
 name: gitleaks
+permissions:
+  actions: write  
+  checks: write    
+  pull-requests: write 
+  contents: read
+  packages: write
 on:
   pull_request:
   push:
