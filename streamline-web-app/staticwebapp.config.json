@@ -1,0 +1,17 @@
+{
+  "trailingSlash": "auto",
+  "routes": [
+    {
+      "route": "/movies*",
+    },
+    {
+      "route": "/user*",
+    },
+    {
+      "route": "/lists*",
+    },
+    {
+      "route": "/settings*",
+    }
+  ]
+}
