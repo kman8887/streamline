@@ -2,22 +2,20 @@
   "trailingSlash": "auto",
   "routes": [
     {
-      "route": "/movies*",
+      "route": "/movies*"
     },
     {
-      "route": "/user*",
+      "route": "/user*"
     },
     {
-      "route": "/lists*",
+      "route": "/lists*"
     },
     {
-      "route": "/settings*",
+      "route": "/settings*"
     }
   ],
-  { 
-    "navigationFallback": { 
-      "rewrite": "/index.html", 
-      "exclude": ["/assets/*", "/static/*", "/images/*"] 
-    } 
-  } 
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/static/*", "/images/*"]
+  }
 }
