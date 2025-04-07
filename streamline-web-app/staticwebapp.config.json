@@ -13,5 +13,11 @@
     {
       "route": "/settings*",
     }
-  ]
+  ],
+  { 
+    "navigationFallback": { 
+      "rewrite": "/index.html", 
+      "exclude": ["/assets/*", "/static/*", "/images/*"] 
+    } 
+  } 
 }
