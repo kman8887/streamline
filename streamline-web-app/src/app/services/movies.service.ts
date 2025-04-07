@@ -11,8 +11,9 @@ import {
 import { ReviewsResponse } from '../models/reviewsResponse';
 import { QueryParamBuilderService } from './queryParamBuilder.service';
 import { filterOption } from '../movie-table/movie-table.component';
+import { environment } from '../../environments/environments';
 
-const API_URL = 'http://localhost:5000/api/v1.0/';
+const API_URL = `${environment.apiUrl}/v1.0/`;
 
 export interface MoviesQueryParams {
   genre?: number[];

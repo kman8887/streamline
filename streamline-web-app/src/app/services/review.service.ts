@@ -4,8 +4,9 @@ import { ReviewReaction } from '../models/reviewReaction.enum';
 import { Observable } from 'rxjs';
 import { Review } from '../models/movie';
 import { createEditReview } from '../models/createEditReview';
+import { environment } from '../../environments/environments';
 
-const apiUrl = 'http://localhost:5000/api/v1.0/';
+const apiUrl = `${environment.apiUrl}/v1.0/`;
 
 @Injectable({ providedIn: 'root' })
 export class ReviewService {
