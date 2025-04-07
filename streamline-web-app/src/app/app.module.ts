@@ -85,6 +85,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { environment } from '../environments/environments';
 
 @NgModule({
   declarations: [
@@ -175,63 +176,63 @@ import { MessageService } from 'primeng/api';
       clientId: 'SyeXGFhQ4pYYjgoEkPziyIa1Aca9T7y7',
       authorizationParams: {
         redirect_uri: window.location.origin,
-        audience: 'http://localhost:5000',
+        audience: environment.audienceUrl,
       },
       httpInterceptor: {
         allowedList: [
           {
-            uri: 'http://localhost:5000/api/v1.0/movies/*',
+            uri: `${environment.apiUrl}/v1.0/movies/*`,
             httpMethod: HttpMethod.Get,
             allowAnonymous: true,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/movies',
+            uri: `${environment.apiUrl}/v1.0/movies`,
             httpMethod: HttpMethod.Get,
             allowAnonymous: true,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/movies/onboarding',
+            uri: `${environment.apiUrl}/v1.0/movies/onboarding`,
             httpMethod: HttpMethod.Get,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/recommendation/generate',
+            uri: `${environment.apiUrl}/v1.0/recommendation/generate`,
             httpMethod: HttpMethod.Get,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/movies/watchlist',
+            uri: `${environment.apiUrl}/v1.0/movies/watchlist`,
             httpMethod: HttpMethod.Get,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/users',
+            uri: `${environment.apiUrl}/v1.0/users`,
             httpMethod: HttpMethod.Post,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/users/*',
+            uri: `${environment.apiUrl}/v1.0/users/*`,
             httpMethod: HttpMethod.Post,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/users/*',
+            uri: `${environment.apiUrl}/v1.0/users/*`,
             httpMethod: HttpMethod.Put,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/users/*',
+            uri: `${environment.apiUrl}/v1.0/users/*`,
             httpMethod: HttpMethod.Get,
             allowAnonymous: true,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/movies/*',
+            uri: `${environment.apiUrl}/v1.0/movies/*`,
             httpMethod: HttpMethod.Post,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/reviews/*',
+            uri: `${environment.apiUrl}/v1.0/reviews/*`,
             httpMethod: HttpMethod.Put,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/reviews/*',
+            uri: `${environment.apiUrl}/v1.0/reviews/*`,
             httpMethod: HttpMethod.Post,
           },
           {
-            uri: 'http://localhost:5000/api/v1.0/reviews/*',
+            uri: `${environment.apiUrl}/v1.0/reviews/*`,
             httpMethod: HttpMethod.Delete,
           },
         ],

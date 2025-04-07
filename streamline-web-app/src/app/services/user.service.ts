@@ -7,8 +7,9 @@ import { QueryParamBuilderService } from './queryParamBuilder.service';
 import { ReviewsQueryParams } from './movies.service';
 import { AuthService } from '@auth0/auth0-angular';
 import { MovieRating } from '../ratings/ratings-onboarding/ratings-onboarding.component';
+import { environment } from '../../environments/environments';
 
-const apiUrl = 'http://localhost:5000/api/v1.0/';
+const apiUrl = `${environment.apiUrl}/v1.0/`;
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
