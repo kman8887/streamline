@@ -144,6 +144,18 @@
             </p-button>
           </div>
         </div>
+        <div
+          *ngIf="!watchProviders"
+          class="w-full flex align-items-center gap-2 flex-wrap"
+        >
+          <div class="text-500 w-full font-medium">
+            No watch providers available
+          </div>
+        </div>
+        <div class="mt-2 flex align-items-center gap-2">
+          Powered by
+          <img class="just-watch-logo" src="assets/JustWatch_Logo.png" />
+        </div>
       </div>
       <div class="container-card mt-3 p-2">
         <ul class="list-none p-0 m-0">

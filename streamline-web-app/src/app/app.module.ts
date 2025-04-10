@@ -86,6 +86,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { environment } from '../environments/environments';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -116,6 +117,7 @@ import { environment } from '../environments/environments';
     WatchlistcardComponent,
     SettingsComponent,
     OnboardingComponent,
+    FooterComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
