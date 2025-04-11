@@ -6,6 +6,7 @@ import { AccountComponent } from './account/account.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { WatchlistComponent } from './watchlist/watchlist.component';
 import { SettingsComponent } from './settings/settings.component';
+import { AboutUsComponent } from './about-us/about-us.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,10 @@ const routes: Routes = [
   {
     path: 'settings',
     component: SettingsComponent,
+  },
+  {
+    path: 'about-us',
+    component: AboutUsComponent,
   },
 ];
 
