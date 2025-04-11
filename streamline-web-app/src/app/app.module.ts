@@ -87,6 +87,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { environment } from '../environments/environments';
 import { FooterComponent } from './footer/footer.component';
+import { AboutUsComponent } from './about-us/about-us.component';
 
 @NgModule({
   declarations: [
@@ -118,6 +119,7 @@ import { FooterComponent } from './footer/footer.component';
     SettingsComponent,
     OnboardingComponent,
     FooterComponent,
+    AboutUsComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
