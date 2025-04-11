@@ -1,7 +1,5 @@
 .card {
   padding: 2rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
 }
 .hero-image {
   background-size: cover;
@@ -11,6 +9,10 @@
   aspect-ratio: 16 / 9;
   width: 100%;
   max-height: 60vh;
+}
+
+.just-watch-logo {
+  width: 80px;
 }
 
 .hero-gradient {
