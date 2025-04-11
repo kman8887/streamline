@@ -34,7 +34,7 @@
     <p-skeleton width="100%" height="80vh" />
   </ng-template>
   <div *ngFor="let movie of movies" class="card mt-3">
-    <span class="text-500 ml-7">{{ movie.title }}</span>
+    <span class="ml-7">{{ movie.title }}</span>
     <p-carousel
       *ngIf="!loading; else loadingTemplate"
       [value]="movie.movies"
