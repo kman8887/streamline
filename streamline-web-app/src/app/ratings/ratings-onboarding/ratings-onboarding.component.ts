@@ -111,7 +111,7 @@ export class RatingsOnboardingComponent implements OnDestroy {
     if (this.rating !== undefined && this.rating !== null) {
       this.movies[currentIndex].rating = this.rating;
     }
-    this.progress += 50;
+    this.progress += 10;
     if (this.progress >= 100) {
       this.ref.close(this.progress);
       return;

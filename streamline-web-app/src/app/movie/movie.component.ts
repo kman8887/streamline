@@ -61,12 +61,10 @@ export class MovieComponent {
   getMovies(): void {
     this.moviesService.findMovie(this.movieId).subscribe((response) => {
       this.movie = response;
-      console.log(this.movie);
       this.getMovieRating();
       this.setIsMovieLiked();
       this.setIsMovieWatched();
       this.watchProviders = this.getWatchProvidersByType();
-      console.log(this.watchProviders);
     });
   }
 
@@ -79,10 +77,23 @@ export class MovieComponent {
 
         this.moviesService
           .getRecommendation(this.loggedInUserId, movie_id)
-          .subscribe((response) => {
-            if (response != null) {
-              this.recommendationScore = response.predicted_score;
-            }
+          .subscribe({
+            next: (response) => {
+              if (response != null) {
+                this.recommendationScore = response.predicted_score;
+              }
+            },
+            error: (error) => {
+              if (error.status === 404) {
+                console.log('No recommendation found for this movie.');
+                this.recommendationScore = undefined;
+              } else {
+                console.error(
+                  'Unexpected error while getting recommendation:',
+                  error
+                );
+              }
+            },
           });
       }
 
@@ -150,14 +161,14 @@ export class MovieComponent {
 
   onMovieWatchListToggle(newState: boolean): void {
     if (this.movie != undefined) {
-      this.movie.is_in_watchlist = newState;
+      this.movie.is_movie_in_watchlist = newState;
       this.moviesService
         .toggleMovieWatchList(this.movie.id, newState)
         .subscribe({
           next: () => {
             console.log(
               `Movie ${
-                this.movie?.is_in_watchlist
+                this.movie?.is_movie_in_watchlist
                   ? 'in watch list'
                   : 'removed from watch list'
               }`
@@ -165,7 +176,8 @@ export class MovieComponent {
           },
           error: (err) => {
             console.error('Error toggling watchlist:', err);
-            this.movie!.is_in_watchlist = !this.movie?.is_in_watchlist; // Revert UI state on failure
+            this.movie!.is_movie_in_watchlist =
+              !this.movie?.is_movie_in_watchlist; // Revert UI state on failure
           },
         });
     }

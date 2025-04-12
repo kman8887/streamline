@@ -3,14 +3,8 @@ import {
   MoviesService,
   WatchListQueryParams,
 } from '../services/movies.service';
-import { LocaleHelperService } from '../services/localeHelper.service';
-import { AuthService } from '@auth0/auth0-angular';
 import { finalize, Subscription } from 'rxjs';
-import {
-  ShowAllMovies,
-  ShowAllMoviesWithRecommendation,
-  WatchListMovie,
-} from '../models/movie';
+import { WatchListMovie } from '../models/movie';
 import { PaginatorState } from 'primeng/paginator';
 
 @Component({
@@ -63,11 +57,9 @@ export class WatchlistComponent {
   }
 
   onPageChange(event: PaginatorState) {
-    console.log('page change');
-    console.log(event);
     this.queryParams.pagination.pageNumber = event.page ? event.page : 0;
     this.queryParams.pagination.pageSize = event.rows ? event.rows : 12;
-    console.log(this.movies.length);
+
     this.first = event.first ? event.first : 0;
     this.rows = event.rows ? event.rows : 12;
     this.getMovies();

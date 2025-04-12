@@ -88,7 +88,8 @@ import { MessageService } from 'primeng/api';
 import { environment } from '../environments/environments';
 import { FooterComponent } from './footer/footer.component';
 import { AboutUsComponent } from './about-us/about-us.component';
-
+import { LoadingService } from './services/loading.service';
+import { CheckboxModule } from 'primeng/checkbox';
 @NgModule({
   declarations: [
     AppComponent,
@@ -136,6 +137,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
+    CheckboxModule,
     StepperModule,
     SkeletonModule,
     TooltipModule,
@@ -247,6 +249,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
     MoviesService,
     UserService,
     DialogService,
+    LoadingService,
     MessageService,
     QueryParamBuilderService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },

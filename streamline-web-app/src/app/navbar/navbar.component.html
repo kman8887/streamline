@@ -1,4 +1,6 @@
-<ng-container *ngIf="!loading; else spinner">
+<ng-container
+  *ngIf="!(loadingService.getLoading$('navbar') | async); else spinner"
+>
   <nav
     id="topNavBarContainer"
     [class]="isNavExpanded ? 'navigation expanded' : 'navigation'"

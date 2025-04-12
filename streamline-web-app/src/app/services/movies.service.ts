@@ -12,6 +12,8 @@ import { ReviewsResponse } from '../models/reviewsResponse';
 import { QueryParamBuilderService } from './queryParamBuilder.service';
 import { filterOption } from '../movie-table/movie-table.component';
 import { environment } from '../../environments/environments';
+import { TrackLoading } from '../decorators/track-loading.decorator';
+import { LoadingService } from './loading.service';
 
 const API_URL = `${environment.apiUrl}/v1.0/`;
 
@@ -24,6 +26,7 @@ export interface MoviesQueryParams {
   sort?: string;
   ratings?: number[];
   pagination: Pagination;
+  onlyShowUsersWatchProviders?: boolean;
 }
 export interface WatchListQueryParams {
   pagination: Pagination;
@@ -45,14 +48,15 @@ export interface Pagination {
 export class MoviesService {
   constructor(
     private httpClient: HttpClient,
-    private queryParamBuilder: QueryParamBuilderService
+    private queryParamBuilder: QueryParamBuilderService,
+    public loadingService: LoadingService
   ) {}
 
+  @TrackLoading()
   findMovie(id: string): Observable<Movie> {
     return this.httpClient.get<Movie>(API_URL + 'movies/' + id);
   }
 
-  // language can be prefiled from user context now
   findMovies(queryParams: MoviesQueryParams): Observable<MoviesResponse> {
     return this.httpClient.get<MoviesResponse>(API_URL + 'movies', {
       params: this.queryParamBuilder.buildMovieParams(queryParams),
@@ -70,7 +74,6 @@ export class MoviesService {
     );
   }
 
-  // Would it make sense to have a hardcoded list of movies for the onboarding. + 3 From most popular right now. Or maybe 3 most popular from current year - 1
   findOnboardingMovies(pageNumber: number): Observable<OnboardingMovie[]> {
     return this.httpClient.get<OnboardingMovie[]>(
       API_URL + 'movies/onboarding',
@@ -80,18 +83,21 @@ export class MoviesService {
     );
   }
 
+  @TrackLoading()
   getMovieFilters(): Observable<MovieFiltersResponse> {
     return this.httpClient.get<MovieFiltersResponse>(
       API_URL + 'movies/filters'
     );
   }
 
+  @TrackLoading()
   getWatchProviders(): Observable<filterOption[]> {
     return this.httpClient.get<filterOption[]>(
       API_URL + 'movies/watch-providers'
     );
   }
 
+  @TrackLoading()
   getRecommendation(
     user_id: string,
     movie_id: string
@@ -110,11 +116,6 @@ export class MoviesService {
 
     return this.httpClient.get<any>(url);
   }
-
-  // Think idea for review was, reviews have ratings, in the row.
-  // But also when create review, add rating into user interactions,
-  // But also can add ratings independently. Does not update review rating
-  // IDK about editing and how that should work.
 
   toggleMovieLike(movieId: string, isLiked: boolean): Observable<any> {
     const url = `${API_URL}movies/${movieId}/like`;

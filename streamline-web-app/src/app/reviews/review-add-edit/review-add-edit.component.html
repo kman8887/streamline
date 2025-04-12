@@ -17,8 +17,7 @@
         [formGroup]="form"
       >
         <div class="flex-auto">
-          <label for="star-rating">Rating</label>
-          <p-rating id="star-rating" formControlName="rating" />
+          <app-star-rating formControlName="rating"></app-star-rating>
         </div>
         <span class="p-float-label">
           <textarea

@@ -1,14 +1,13 @@
-import { Component, ModelFunction, signal, OnInit } from '@angular/core';
-import { finalize, forkJoin, Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { forkJoin, Subscription } from 'rxjs';
 import {
   ShowAllMovies,
   ShowAllMoviesWithRecommendation,
 } from '../models/movie';
-import { LocaleHelperService } from '../services/localeHelper.service';
 import { MoviesQueryParams, MoviesService } from '../services/movies.service';
-import { AuthService } from '@auth0/auth0-angular';
 import { GenreMapping } from '../enums/genreMapping.enum';
-import { MoviesResponse } from '../models/moviesResponse';
+import { LoadingService } from '../services/loading.service';
+import { TrackLoading } from '../decorators/track-loading.decorator';
 
 interface MoviesCarousel {
   movies: ShowAllMovies[];
@@ -20,7 +19,6 @@ interface MoviesCarousel {
   styleUrl: './homepage.component.scss',
 })
 export class HomepageComponent implements OnInit {
-  loading = true;
   movies: MoviesCarousel[] = [
     {
       movies: [],
@@ -95,11 +93,10 @@ export class HomepageComponent implements OnInit {
 
   constructor(
     private moviesService: MoviesService,
-    private localHelper: LocaleHelperService
+    public loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {
-    console.log(this.localHelper.getUsersLocale());
     this.getHeroMovies();
     this.getAllMovieCarousels();
   }
@@ -139,10 +136,22 @@ export class HomepageComponent implements OnInit {
   }
 
   getAllMovieCarousels() {
-    this.loading = true;
+    this.moviesSubscriptions.add(
+      this.getAllMovieCarousels$().subscribe((responses) => {
+        // Map responses to the corresponding movie carousels
+        this.movies[0].movies = responses[0].movies; // Top Picks
+        this.movies[1].movies = responses[1].movies; // Comedy
+        this.movies[2].movies = responses[2].movies; // Romance
+        this.movies[3].movies = responses[3].movies; // Action
+        this.movies[4].movies = responses[4].movies; // Sci-Fi
+        this.movies[5].movies = responses[5].movies; // Popular
+      })
+    );
+  }
 
-    // Create an array of observables for each genre
-    const observables = [
+  @TrackLoading('homepage')
+  private getAllMovieCarousels$() {
+    return forkJoin([
       this.moviesService.findMovies({
         ...this.baseQueryParams,
       }),
@@ -166,21 +175,6 @@ export class HomepageComponent implements OnInit {
         ...this.baseQueryParams,
         sort: 'popularity:-1',
       }),
-    ];
-
-    // Use forkJoin to wait for all observables to complete
-    this.moviesSubscriptions.add(
-      forkJoin(observables)
-        .pipe(finalize(() => (this.loading = false))) // Set loading to false after all complete
-        .subscribe((responses) => {
-          // Map responses to the corresponding movie carousels
-          this.movies[0].movies = responses[0].movies; // Top Picks
-          this.movies[1].movies = responses[1].movies; // Comedy
-          this.movies[2].movies = responses[2].movies; // Romance
-          this.movies[3].movies = responses[3].movies; // Action
-          this.movies[4].movies = responses[4].movies; // Sci-Fi
-          this.movies[5].movies = responses[5].movies; // Popular
-        })
-    );
+    ]);
   }
 }

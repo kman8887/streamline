@@ -1,7 +1,6 @@
 import { Component, OnInit, signal, computed, effect } from '@angular/core';
 import { MoviesService, MoviesQueryParams } from '../services/movies.service';
 import {
-  Movie,
   ShowAllMovies,
   ShowAllMoviesWithRecommendation,
 } from '../models/movie';
@@ -11,12 +10,14 @@ import {
   faApple,
   faLinux,
 } from '@fortawesome/free-brands-svg-icons';
-import { LocaleHelperService } from '../services/localeHelper.service';
-import { loadTranslations } from '@angular/localize';
-import { finalize, forkJoin, Subscription, take } from 'rxjs';
-import { AuthService } from '@auth0/auth0-angular';
+import { forkJoin, Observable, Subscription, take } from 'rxjs';
+import { AuthService, User } from '@auth0/auth0-angular';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { MovieFiltersResponse } from '../models/moviesResponse';
+import { MovieFiltersResponse, MoviesResponse } from '../models/moviesResponse';
+import { TrackLoading } from '../decorators/track-loading.decorator';
+import { LoadingService } from '../services/loading.service';
+import { UserService } from '../services/user.service';
+import { UserWatchProviders } from '../models/user';
 
 export interface filterOption {
   id: number;
@@ -58,12 +59,12 @@ export class MovieTableComponent implements OnInit {
     },
   };
 
-  loading = signal(false);
   movies = signal<ShowAllMovies[] | ShowAllMoviesWithRecommendation[]>([]);
   genresFilterOptions = signal<filterOption[]>([]);
   tagsFilterOptions = signal<filterOption[]>([]);
   watchProvidersFilterOptions = signal<filterOption[]>([]);
   totalRecords = 0;
+  showFilterByUsersWatchProviders = false;
 
   private moviesCache = new Map<
     string,
@@ -82,15 +83,14 @@ export class MovieTableComponent implements OnInit {
 
   constructor(
     private moviesService: MoviesService,
-    private localHelper: LocaleHelperService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private userService: UserService,
+    public loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {
-    console.log(this.localHelper.getUsersLocale());
-    this.loading.set(true);
     this.getUser();
 
     const storedFilters = localStorage.getItem(this.filterCacheKey);
@@ -105,6 +105,7 @@ export class MovieTableComponent implements OnInit {
         });
         this.route.queryParams.subscribe((response) => {
           this.getQueryParams(response);
+
           this.getMovies();
         });
         return;
@@ -113,6 +114,7 @@ export class MovieTableComponent implements OnInit {
         localStorage.removeItem(this.filterCacheKey);
       }
     }
+
     forkJoin({
       params: this.route.queryParams.pipe(take(1)), // Observable for the current user
       filters: this.moviesService.getMovieFilters(), // Observable for watch providers
@@ -127,15 +129,32 @@ export class MovieTableComponent implements OnInit {
     this.moviesSubscription ? this.moviesSubscription.unsubscribe() : null;
   }
 
+  setShowFilterByUsersWatchProviders(): void {
+    this.userService
+      .getUserWatchProviders(Number(this.loggedInUserId))
+      .subscribe((response) => {
+        if (response) {
+          this.showFilterByUsersWatchProviders =
+            response.watchProviders.length > 0;
+        } else {
+          this.showFilterByUsersWatchProviders = false;
+        }
+      });
+  }
+
   getUser(): void {
-    this.authService.user$.subscribe((response: any) => {
-      if (response) {
-        this.loggedInUserId = response._id;
-        this.sortOptions = [...this.sortOptions, this.recommendedOptions];
-      } else {
-        this.loggedInUserId = '';
-      }
-    });
+    this.loadUser$()
+      .pipe(take(1))
+      .subscribe((response: any) => {
+        if (response) {
+          this.loggedInUserId = response._id;
+          this.setShowFilterByUsersWatchProviders();
+          this.sortOptions = [...this.sortOptions, this.recommendedOptions];
+        } else {
+          this.loggedInUserId = '';
+          this.showFilterByUsersWatchProviders = false;
+        }
+      });
   }
 
   setFilters(response: MovieFiltersResponse): void {
@@ -154,8 +173,6 @@ export class MovieTableComponent implements OnInit {
   }
 
   getMovies(): void {
-    this.loading.set(true);
-
     const key = this.getCacheKey(this.queryParams);
 
     if (this.moviesCache.has(key)) {
@@ -163,7 +180,6 @@ export class MovieTableComponent implements OnInit {
       if (entry && this.isCacheValid(entry.timestamp)) {
         this.movies.set(entry.movies);
         this.totalRecords = entry.totalRecords;
-        this.loading.set(false);
         return;
       }
     }
@@ -172,9 +188,8 @@ export class MovieTableComponent implements OnInit {
       this.moviesSubscription.unsubscribe();
     }
 
-    this.moviesSubscription = this.moviesService
-      .findMovies(this.queryParams)
-      .pipe(finalize(() => this.loading.set(false)))
+    this.moviesSubscription = this.getMovies$()
+      .pipe(take(1))
       .subscribe((response) => {
         this.movies.set(response.movies);
         this.totalRecords = response.total_count;
@@ -185,6 +200,7 @@ export class MovieTableComponent implements OnInit {
         });
       });
   }
+
   onSortChange(event: any) {
     let value = event.value;
 
@@ -226,6 +242,16 @@ export class MovieTableComponent implements OnInit {
     this.getMovies();
   }
 
+  @TrackLoading()
+  private loadUser$(): Observable<User | null | undefined> {
+    return this.authService.user$;
+  }
+
+  @TrackLoading('movies-table')
+  private getMovies$(): Observable<MoviesResponse> {
+    return this.moviesService.findMovies(this.queryParams);
+  }
+
   private resetPagingParams(): void {
     this.queryParams.pagination.pageNumber = 0;
     this.first = 0;
@@ -265,9 +291,12 @@ export class MovieTableComponent implements OnInit {
       this.queryParams.releaseDates = [new Date(params['dateFrom'])];
     }
 
-    console.log(this.queryParams.releaseDates);
-
     this.queryParams.search = params['search'];
+
+    if (params['onlyShowUsersWatchProviders']) {
+      this.queryParams.onlyShowUsersWatchProviders =
+        params['onlyShowUsersWatchProviders'] === 'true';
+    }
 
     this.ratingSliderValues = [
       +params['ratingMin'] || 0,
@@ -295,6 +324,8 @@ export class MovieTableComponent implements OnInit {
         genre: this.queryParams.genre,
         watchProviders: this.queryParams.watchProviders,
         search: this.queryParams.search,
+        onlyShowUsersWatchProviders:
+          this.queryParams.onlyShowUsersWatchProviders,
       },
       queryParamsHandling: 'merge', // retain others
     });

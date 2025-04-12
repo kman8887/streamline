@@ -8,6 +8,8 @@ import { ReviewsQueryParams } from './movies.service';
 import { AuthService } from '@auth0/auth0-angular';
 import { MovieRating } from '../ratings/ratings-onboarding/ratings-onboarding.component';
 import { environment } from '../../environments/environments';
+import { LoadingService } from './loading.service';
+import { TrackLoading } from '../decorators/track-loading.decorator';
 
 const apiUrl = `${environment.apiUrl}/v1.0/`;
 
@@ -16,19 +18,22 @@ export class UserService {
   constructor(
     private httpClient: HttpClient,
     private queryParamBuilder: QueryParamBuilderService,
-    private authService: AuthService
+    public loadingService: LoadingService
   ) {}
 
+  @TrackLoading()
   getUser(id: string): Observable<User> {
     return this.httpClient.get<User>(apiUrl + 'users/' + id);
   }
 
+  @TrackLoading()
   getUserWatchProviders(id: number): Observable<UserWatchProviders> {
     return this.httpClient.get<UserWatchProviders>(
       apiUrl + 'users/' + id + '/watch-providers'
     );
   }
 
+  @TrackLoading()
   createUser(body = {}): Observable<User> {
     return this.httpClient.post<User>(apiUrl + 'users', body);
   }
