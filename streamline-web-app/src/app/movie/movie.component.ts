@@ -1,23 +1,8 @@
 import { Component } from '@angular/core';
-import { Movie, Review, UserInteraction, WatchProvider } from '../models/movie';
+import { Movie, WatchProvider } from '../models/movie';
 import { MoviesService, ReviewsQueryParams } from '../services/movies.service';
 import { ActivatedRoute } from '@angular/router';
-import { PaginatorState } from 'primeng/paginator';
-import {
-  faFaceLaughBeam,
-  faThumbsUp,
-  faThumbsDown,
-} from '@fortawesome/free-solid-svg-icons';
-import {
-  faWindows,
-  faApple,
-  faLinux,
-} from '@fortawesome/free-brands-svg-icons';
 import { AuthService } from '@auth0/auth0-angular';
-import { ReviewReaction } from '../models/reviewReaction.enum';
-import { ReviewService } from '../services/review.service';
-import { createEditReview } from '../models/createEditReview';
-import { editReview } from '../reviews/review-add-edit/review-add-edit.component';
 import * as _ from 'lodash';
 import { InteractionType } from '../models/interactionType.enum';
 import { WatchProviderType } from '../models/watchProviderType.enum';

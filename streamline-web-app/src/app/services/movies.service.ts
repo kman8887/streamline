@@ -135,6 +135,7 @@ export class MoviesService {
     return this.httpClient.post(url, { isInWatchList });
   }
 
+  @TrackLoading('reviews-table')
   getReviews(
     id: string,
     queryParams: ReviewsQueryParams

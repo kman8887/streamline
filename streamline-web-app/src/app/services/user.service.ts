@@ -38,6 +38,7 @@ export class UserService {
     return this.httpClient.post<User>(apiUrl + 'users', body);
   }
 
+  @TrackLoading('reviews-table')
   getUserReviews(
     user_id: string,
     queryParams: ReviewsQueryParams
