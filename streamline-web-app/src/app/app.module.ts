@@ -29,7 +29,6 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { PricePipe } from './movie-table/price.pipe';
 import { InputTextModule } from 'primeng/inputtext';
 import { SliderModule } from 'primeng/slider';
 import { CalendarModule } from 'primeng/calendar';
@@ -56,7 +55,6 @@ import { HttpContextInterceptor } from './interceptors/httpContext.interceptor';
 import { WatchButtonComponent } from './common/watchButton.component';
 import { RatingModule } from 'primeng/rating';
 import { RatingsOnboardingComponent } from './ratings/ratings-onboarding/ratings-onboarding.component';
-import { RatingsOnboardingDynamicDialogComponent } from './ratings/ratings-onboarding-dynamic-dialog/ratings-onboarding-dynamic-dialog.component';
 import { StarRatingComponent } from './common/starRating.component';
 import { PeoplePipe } from './movie/people.pipe';
 import { ReviewCardComponent } from './reviews/review-card/review-card.component';
@@ -75,7 +73,6 @@ import { WatchlistcardComponent } from './watchlist/watchlistcard/watchlistcard.
 import { ListboxModule } from 'primeng/listbox';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { SettingsComponent } from './settings/settings.component';
-import { OnboardingComponent } from './onboarding/onboarding.component';
 import { StepperModule } from 'primeng/stepper';
 import { StepsModule } from 'primeng/steps';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -96,7 +93,6 @@ import { CheckboxModule } from 'primeng/checkbox';
     NavbarComponent,
     MovieTableComponent,
     MovieCardComponent,
-    PricePipe,
     RatingsFilterPipe,
     TimePipe,
     MovieComponent,
@@ -106,7 +102,6 @@ import { CheckboxModule } from 'primeng/checkbox';
     LikeButtonComponent,
     WatchButtonComponent,
     RatingsOnboardingComponent,
-    RatingsOnboardingDynamicDialogComponent,
     StarRatingComponent,
     PeoplePipe,
     ReviewCardComponent,
@@ -118,7 +113,6 @@ import { CheckboxModule } from 'primeng/checkbox';
     WatchlistComponent,
     WatchlistcardComponent,
     SettingsComponent,
-    OnboardingComponent,
     FooterComponent,
     AboutUsComponent,
   ],

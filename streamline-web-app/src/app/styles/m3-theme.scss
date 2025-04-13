@@ -161,31 +161,3 @@ $dark-theme: mat.define-theme(
     ),
   )
 );
-
-// $light-theme-2: mat.m2-define-light-theme(
-//     (
-//     color: (
-//       theme-type: light,
-//       primary: $_primary,
-//       tertiary: $_tertiary,
-//       use-system-variables: true,
-//     ),
-//     typography: (
-//       use-system-variables: true,
-//     ),
-//   )
-// );
-
-// $dark-theme-2: mat.m2-define-dark-theme(
-//     (
-//     color: (
-//       theme-type: light,
-//       primary: $_primary,
-//       tertiary: $_tertiary,
-//       use-system-variables: true,
-//     ),
-//     typography: (
-//       use-system-variables: true,
-//     ),
-//   )
-// );

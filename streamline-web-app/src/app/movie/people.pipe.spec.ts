@@ -1,4 +1,4 @@
-import { PeoplePipe } from '../people.pipe';
+import { PeoplePipe } from './people.pipe';
 
 describe('PeoplePipe', () => {
   it('create an instance', () => {

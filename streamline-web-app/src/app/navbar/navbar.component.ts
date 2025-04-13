@@ -26,8 +26,6 @@ export class NavbarComponent implements OnInit {
       shareReplay()
     );
 
-  largeNavBarLogo = '/assets/image2vector (1).svg';
-  smallNavBarLogo = '/assets/image2vector (1).svg';
   creatingNew = false;
   isNavExpanded = false;
   user: User | undefined | null;
