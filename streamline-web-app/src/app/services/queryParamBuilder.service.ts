@@ -126,7 +126,6 @@ export class QueryParamBuilderService {
     let params = new HttpParams();
 
     if (movie_id) {
-      console.log('Here');
       params = params.append('movie_id', movie_id);
     }
 
@@ -137,7 +136,6 @@ export class QueryParamBuilderService {
     pagination: Pagination,
     params: HttpParams
   ): HttpParams {
-    console.log(pagination.pageNumber);
     if (pagination.pageNumber) {
       params = params.append('pn', pagination.pageNumber);
     }

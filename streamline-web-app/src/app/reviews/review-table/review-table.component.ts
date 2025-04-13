@@ -1,11 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ReviewReaction } from '../../models/reviewReaction.enum';
 import { Review, ReviewWithMovie } from '../../models/movie';
-import {
-  MoviesService,
-  ReviewsQueryParams,
-} from '../../services/movies.service';
-import { ActivatedRoute } from '@angular/router';
+import { ReviewsQueryParams } from '../../services/movies.service';
 import { PaginatorState } from 'primeng/paginator';
 import { ReviewService } from '../../services/review.service';
 import { ReviewsResponse } from '../../models/reviewsResponse';
@@ -88,7 +83,6 @@ export class ReviewTableComponent implements OnInit {
 
   onSortChange(event: any) {
     let value = event.value;
-    console.log('sort change');
 
     if (value.indexOf(':') > 0) {
       this.queryParams.sort = value;
@@ -100,9 +94,6 @@ export class ReviewTableComponent implements OnInit {
   }
 
   onFilterChange(event: any) {
-    console.log(event);
-    console.log('filter change');
-    console.log(this.queryParams.isRecommended);
     if (event.value.length > 0) {
       this.queryParams.isRecommended = [event.itemValue['value']];
     }
@@ -110,15 +101,12 @@ export class ReviewTableComponent implements OnInit {
   }
 
   onPageChange(event: PaginatorState) {
-    console.log('page change');
-    console.log(event);
     this.queryParams.pagination.pageNumber = event.page ? event.page : 0;
     this.queryParams.pagination.pageSize = event.rows ? event.rows : 10;
     this.getReviews();
   }
 
   onRatingFilterChange(event: any) {
-    console.log(event);
     this.queryParams.ratings = this.ratingSliderValues;
     this.getReviews();
   }

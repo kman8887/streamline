@@ -130,7 +130,6 @@ export class HomepageComponent implements OnInit {
         },
       })
       .subscribe((response) => {
-        console.log(response);
         this.heroMovies = response.movies;
       });
   }

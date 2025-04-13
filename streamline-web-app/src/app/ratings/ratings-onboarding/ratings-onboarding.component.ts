@@ -1,11 +1,16 @@
-import { Component, OnDestroy, signal } from '@angular/core';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Component, Input, OnDestroy, signal } from '@angular/core';
+import {
+  DialogService,
+  DynamicDialogRef,
+  DynamicDialogConfig,
+} from 'primeng/dynamicdialog';
 import { MoviesService } from '../../services/movies.service';
 import { OnboardingMovie, ShowAllMovies } from '../../models/movie';
 import { finalize, Subscription } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '@auth0/auth0-angular';
 import { LoadingService } from '../../services/loading.service';
+import { User } from '../../models/user';
 
 export interface MovieRating
   extends Omit<ShowAllMovies, 'vote_average' | 'genres' | 'backdrop_path'> {
@@ -38,8 +43,9 @@ export class RatingsOnboardingComponent implements OnDestroy {
     private moviesService: MoviesService,
     private userService: UserService,
     private authService: AuthService,
-    private dialogService: DialogService,
     private ref: DynamicDialogRef,
+    public config: DynamicDialogConfig,
+    public dialogService: DialogService,
     public loadingService: LoadingService
   ) {}
 
@@ -49,7 +55,6 @@ export class RatingsOnboardingComponent implements OnDestroy {
   }
 
   getMovies(): void {
-    console.log('getMovies');
     this.loading.set(true);
 
     if (this.moviesSubscription) {
@@ -77,7 +82,7 @@ export class RatingsOnboardingComponent implements OnDestroy {
   }
 
   closeAndSubmitRatings(): void {
-    if (this.currentUserId !== null) {
+    if (this.currentUserId !== null && this.currentUserId !== undefined) {
       const filteredMovies = this.getFilteredMovieRatings();
       if (filteredMovies.length > 0) {
         this.userService
@@ -111,7 +116,6 @@ export class RatingsOnboardingComponent implements OnDestroy {
   }
 
   rateMovie() {
-    console.log('rating ' + this.rating);
     const currentIndex = this.movies.findIndex(
       (movie) => movie.id === this.movie.id
     );
@@ -137,12 +141,9 @@ export class RatingsOnboardingComponent implements OnDestroy {
   }
 
   private nextMovie() {
-    console.log('next movie');
     const currentIndex = this.movies.findIndex(
       (movie) => movie.id === this.movie.id
     );
-
-    console.log('index ' + currentIndex);
 
     if (currentIndex !== -1 && currentIndex < this.movies.length - 1) {
       this.movie = this.movies[currentIndex + 1];
@@ -165,105 +166,11 @@ export class RatingsOnboardingComponent implements OnDestroy {
 
   private getCurrentUser(): void {
     this.authService.user$.subscribe((response: any) => {
-      this.currentUserId = response._id;
+      if (response && response._id) {
+        this.currentUserId = response._id;
+      } else if (this.config.data && this.config.data.user) {
+        this.currentUserId = this.config.data.user.id;
+      }
     });
   }
-
-  // closeDialog(data: any) {
-  //   this.ref.close(data);
-  // }
-
-  // getSeverity(status: string) {
-  //   switch (status) {
-  //     case 'INSTOCK':
-  //       return 'success';
-  //     case 'LOWSTOCK':
-  //       return 'warning';
-  //     case 'OUTOFSTOCK':
-  //       return 'danger';
-  //   }
-  // }
 }
-
-// import { Component, OnInit } from '@angular/core';
-// import { Product } from '@/domain/product';
-// import { ProductService } from '@/service/productservice';
-// import { MessageService } from 'primeng/api';
-// import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-// import { InfoDemo } from './infodemo';
-// import { TableModule } from 'primeng/table'
-// import { ButtonModule } from 'primeng/button';
-
-// @Component({
-//     providers: [DialogService, MessageService, ProductService],
-//     standalone:true,
-//     imports:[TableModule, ButtonModule],
-//     template: `<div class="flex justify-end mt-1 mb-4">
-//             <p-button icon="pi pi-external-link" label="Nested Dialog" [outlined]="true" severity="success" (click)="showInfo()" />
-//         </div>
-//         <p-table [value]="products" responsiveLayout="scroll" [rows]="5" [responsive]="true">
-//             <ng-template pTemplate="header">
-//                 <tr>
-//                     <th pSortableColumn="code">Code</th>
-//                     <th pSortableColumn="name">Name</th>
-//                     <th pSortableColumn="year">Image</th>
-//                     <th pSortableColumn="price">Category</th>
-//                     <th pSortableColumn="inventoryStatus">Quantity</th>
-//                     <th style="width:4em"></th>
-//                 </tr>
-//             </ng-template>
-//             <ng-template pTemplate="body" let-product>
-//                 <tr>
-//                     <td>{{ product.code }}</td>
-//                     <td>{{ product.name }}</td>
-//                     <td><img src="https://primefaces.org/cdn/primeng/images/demo/product/{{ product.image }}" [alt]="product.image" class="w-16 h-16 shadow" /></td>
-//                     <td>{{ product.category }}</td>
-//                     <td>
-//                         {{ product.quantity }}
-//                     </td>
-//                     <td>
-//                         <p-button type="button" [text]="true" [rounded]="true" icon="pi pi-plus" (click)="selectProduct(product)" />
-//                     </td>
-//                 </tr>
-//             </ng-template>
-//         </p-table>`
-// })
-// export class ProductListDemo implements OnInit {
-//     products: Product[];
-
-//     constructor(private productService: ProductService, private dialogService: DialogService, private ref: DynamicDialogRef) {}
-
-//     ngOnInit() {
-//         this.productService.getProductsSmall().then((products) => (this.products = products.slice(0, 5)));
-//     }
-
-//     selectProduct(product: Product) {
-//         this.ref.close(product);
-//     }
-
-//     showInfo() {
-//         this.dialogService.open(InfoDemo, {
-//             header: 'Information',
-//             modal: true,
-//             dismissableMask: true,
-//             data: {
-//                 totalProducts: this.products ? this.products.length : 0
-//             }
-//         });
-//     }
-
-//     closeDialog(data) {
-//         this.ref.close(data);
-//     }
-
-//     getSeverity(status: string) {
-//         switch (status) {
-//             case 'INSTOCK':
-//                 return 'success';
-//             case 'LOWSTOCK':
-//                 return 'warning';
-//             case 'OUTOFSTOCK':
-//                 return 'danger';
-//         }
-//     }
-// }

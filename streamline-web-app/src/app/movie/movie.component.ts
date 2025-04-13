@@ -263,12 +263,6 @@ export class MovieComponent {
   }
 
   private setIsMovieLiked(): void {
-    console.log(this.movie?.user_interactions);
-    console.log(
-      this.movie?.user_interactions.some(
-        (interaction) => interaction.type === InteractionType.LIKE
-      )
-    );
     this.isMovieLiked =
       this.movie != undefined &&
       this.movie?.user_interactions &&
