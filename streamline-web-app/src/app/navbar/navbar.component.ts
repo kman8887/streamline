@@ -123,15 +123,6 @@ export class NavbarComponent implements OnInit {
     });
 
     this.ref.onClose.subscribe(() => {
-      console.log('Dialog closed');
-      this.moviesService.createRecommendation().subscribe({
-        next: () => {
-          console.log('Recommendation created successfully');
-        },
-        error: (err) => {
-          console.error('Error toggling watch:', err);
-        },
-      });
       this.refresh();
     });
   }
