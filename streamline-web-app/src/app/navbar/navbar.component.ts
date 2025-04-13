@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { merge, Observable, of } from 'rxjs';
-import { delay, map, shareReplay, take } from 'rxjs/operators';
+import { forkJoin, merge, Observable, of } from 'rxjs';
+import { catchError, delay, map, shareReplay, take } from 'rxjs/operators';
 import { AppState, AuthService, User } from '@auth0/auth0-angular';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
@@ -82,6 +82,12 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  logout() {
+    this.authService.logout({
+      logoutParams: { returnTo: window.location.origin },
+    });
+  }
+
   setIsNavExpanded(newValue: boolean) {
     this.isNavExpanded = newValue;
   }
@@ -133,10 +139,5 @@ export class NavbarComponent implements OnInit {
   @TrackLoading()
   loadUser$(): Observable<User | null | undefined> {
     return this.authService.user$;
-  }
-
-  @TrackLoading()
-  loadAppState$(): Observable<AppState> {
-    return this.authService.appState$;
   }
 }
