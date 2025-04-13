@@ -51,6 +51,7 @@ export class UserService {
     );
   }
 
+  @TrackLoading('onboarding')
   bulkRateMovies(
     movieRatings: MovieRating[],
     userId: number

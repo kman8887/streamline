@@ -5,6 +5,7 @@ import { OnboardingMovie, ShowAllMovies } from '../../models/movie';
 import { finalize, Subscription } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '@auth0/auth0-angular';
+import { LoadingService } from '../../services/loading.service';
 
 export interface MovieRating
   extends Omit<ShowAllMovies, 'vote_average' | 'genres' | 'backdrop_path'> {
@@ -38,7 +39,8 @@ export class RatingsOnboardingComponent implements OnDestroy {
     private userService: UserService,
     private authService: AuthService,
     private dialogService: DialogService,
-    private ref: DynamicDialogRef
+    private ref: DynamicDialogRef,
+    public loadingService: LoadingService
   ) {}
 
   ngOnInit() {
@@ -74,8 +76,7 @@ export class RatingsOnboardingComponent implements OnDestroy {
     return baseUrl + poster_url;
   }
 
-  ngOnDestroy() {
-    this.moviesSubscription ? this.moviesSubscription.unsubscribe() : null;
+  closeAndSubmitRatings(): void {
     if (this.currentUserId !== null) {
       const filteredMovies = this.getFilteredMovieRatings();
       if (filteredMovies.length > 0) {
@@ -92,11 +93,17 @@ export class RatingsOnboardingComponent implements OnDestroy {
             },
             complete: () => {
               console.log('Bulk rate movies request completed.');
-              // Optional: Handle any cleanup or final steps
+              this.ref.close(this.progress);
             },
           });
       }
+    } else {
+      this.ref.close(this.progress);
     }
+  }
+
+  ngOnDestroy() {
+    this.moviesSubscription ? this.moviesSubscription.unsubscribe() : null;
   }
 
   isRateMovieDisabled(): boolean {
@@ -114,7 +121,7 @@ export class RatingsOnboardingComponent implements OnDestroy {
     }
     this.progress += 10;
     if (this.progress >= 100) {
-      this.ref.close(this.progress);
+      this.closeAndSubmitRatings();
       return;
     }
 
