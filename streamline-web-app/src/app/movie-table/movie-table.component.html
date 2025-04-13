@@ -24,7 +24,10 @@
         </span>
       </div>
       <div
-        *ngIf="!loading(); else loadingTemplate"
+        *ngIf="
+          (loadingService.getLoading$('movies-table') | async) === false;
+          else loadingTemplate
+        "
         class="grid grid-nogutter tableContent"
       >
         <div
@@ -36,7 +39,10 @@
       </div>
       <div
         class="no-movies-text flex align-items-center m-auto w-full justify-content-center p-8"
-        *ngIf="movies().length == 0 && !loading()"
+        *ngIf="
+          movies().length == 0 &&
+          (loadingService.getLoading$('movies-table') | async) === false
+        "
       >
         No Movies Match The Filters
       </div>
@@ -46,7 +52,7 @@
         </div>
       </ng-template>
       <p-paginator
-        *ngIf="!loading()"
+        *ngIf="(loadingService.getLoading$('movies-table') | async) === false"
         (onPageChange)="onPageChange($event)"
         [first]="first"
         [rows]="queryParams.pagination.pageSize"
@@ -113,6 +119,18 @@
           (onSelect)="onDateSelectChange($event)"
           (onClearClick)="onDateSelectChange($event)"
         ></p-calendar>
+      </div>
+      <div
+        *ngIf="showFilterByUsersWatchProviders"
+        class="flex-auto flex align-items-center justify-content-center"
+      >
+        <p-checkbox
+          [(ngModel)]="queryParams.onlyShowUsersWatchProviders"
+          (onChange)="onFilterChange()"
+          [binary]="true"
+          inputId="stream"
+        />
+        <label class="font-bold ml-2" for="stream">Available to Stream</label>
       </div>
       <span class="w-full m-auto records">{{ totalRecords }} Results</span>
     </div>

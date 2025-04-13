@@ -14,7 +14,7 @@ export interface Movie {
   tags: Tag[];
   title: string;
   user_interactions: UserInteraction[];
-  is_in_watchlist: boolean;
+  is_movie_in_watchlist: boolean;
   vote_average: number;
   vote_count: number;
   watch_providers: WatchProvider[];
@@ -44,7 +44,7 @@ export interface WatchListMovie {
   release_date: Date;
   poster_path: string;
   backdrop_path: string;
-  recommendation_score: number;
+  recommendation_score: number | null;
 }
 
 export interface OnboardingMovie {

@@ -53,13 +53,16 @@ export class QueryParamBuilderService {
       params = params.append('search', queryParams.search);
     }
 
+    if (queryParams.onlyShowUsersWatchProviders) {
+      params = params.append(
+        'onlyShowUsersWatchProviders',
+        queryParams.onlyShowUsersWatchProviders
+      );
+    }
+
     if (queryParams.sort) {
       params = params.append('sort', queryParams.sort);
     }
-
-    // if (queryParams.language) {
-    //   params = params.append('language', queryParams.language);
-    // }
 
     if (queryParams.pagination) {
       params = this.buildPaginationParams(queryParams.pagination, params);

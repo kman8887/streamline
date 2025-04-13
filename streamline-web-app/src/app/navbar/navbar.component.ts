@@ -1,15 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
-import { isEmpty, map, shareReplay } from 'rxjs/operators';
-import { AuthService, User } from '@auth0/auth0-angular';
+import { merge, Observable, of } from 'rxjs';
+import { delay, map, shareReplay, take } from 'rxjs/operators';
+import { AppState, AuthService, User } from '@auth0/auth0-angular';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { OnboardingComponent } from '../onboarding/onboarding.component';
 import { RatingsOnboardingComponent } from '../ratings/ratings-onboarding/ratings-onboarding.component';
 import { MoviesService } from '../services/movies.service';
-import { MessageService } from 'primeng/api';
+import { LoadingService } from '../services/loading.service';
+import { TrackLoading } from '../decorators/track-loading.decorator';
 
 @Component({
   selector: 'app-navbar',
@@ -28,7 +28,6 @@ export class NavbarComponent implements OnInit {
 
   largeNavBarLogo = '/assets/image2vector (1).svg';
   smallNavBarLogo = '/assets/image2vector (1).svg';
-  loading = true;
   creatingNew = false;
   isNavExpanded = false;
   user: User | undefined | null;
@@ -41,23 +40,26 @@ export class NavbarComponent implements OnInit {
     public router: Router,
     private userService: UserService,
     public dialogService: DialogService,
-    private moviesService: MoviesService
+    private moviesService: MoviesService,
+    public loadingService: LoadingService
   ) {}
 
   ngOnInit() {
-    this.authService.appState$.subscribe((response: any) => {
-      this.creatingNew = true;
-      this.createUserIfNew();
-    });
-
-    this.authService.user$.subscribe((response: any) => {
-      this.user = response;
-      console.log(this.user);
-      if (this.creatingNew) {
-        return;
-      }
-      this.loading = false;
-    });
+    this.loadUser$()
+      .pipe(take(1))
+      .subscribe((response: any) => {
+        this.user = response;
+        console.log(this.user);
+        if (this.user && !this.user['_id']) {
+          this.userService
+            .createUser()
+            .pipe(take(1))
+            .subscribe({
+              next: () => this.show(),
+              error: (err) => console.error('Error creating user:', err),
+            });
+        }
+      });
   }
 
   login() {
@@ -81,28 +83,6 @@ export class NavbarComponent implements OnInit {
   showSearchBar(): boolean {
     const currentUrl = this.router.url;
     return !currentUrl.startsWith('/movies');
-  }
-
-  private createUserIfNew() {
-    if (this.user) {
-      if (!this.user['_id']) {
-        this.userService.createUser().subscribe((response: any) => {
-          this.show();
-        });
-      } else {
-        this.loading = false;
-      }
-    } else {
-      this.authService.user$.subscribe((response: User | undefined | null) => {
-        if (response != undefined && response != null && !response['_id']) {
-          this.userService.createUser().subscribe((response: any) => {
-            this.show();
-          });
-        } else {
-          this.loading = false;
-        }
-      });
-    }
   }
 
   private refresh(): void {
@@ -134,5 +114,15 @@ export class NavbarComponent implements OnInit {
       });
       this.refresh();
     });
+  }
+
+  @TrackLoading()
+  loadUser$(): Observable<User | null | undefined> {
+    return this.authService.user$;
+  }
+
+  @TrackLoading()
+  loadAppState$(): Observable<AppState> {
+    return this.authService.appState$;
   }
 }

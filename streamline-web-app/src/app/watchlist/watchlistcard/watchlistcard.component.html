@@ -13,6 +13,7 @@
         {{ movie.title }}
       </div>
       <span
+        *ngIf="movie.recommendation_score != null"
         class="match"
         [ngClass]="getRecommendationStyling(movie.recommendation_score)"
       >

@@ -17,6 +17,7 @@ import { ReviewService } from '../services/review.service';
 import { Observable } from 'rxjs';
 import { ReviewsResponse } from '../models/reviewsResponse';
 import { ReviewTableData } from '../reviews/review-table/review-table.component';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-account',
@@ -34,7 +35,8 @@ export class AccountComponent {
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {
