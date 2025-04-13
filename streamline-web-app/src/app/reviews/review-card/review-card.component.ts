@@ -2,12 +2,6 @@ import { Component, Input } from '@angular/core';
 import { Review, ReviewWithMovie } from '../../models/movie';
 import { editReview } from '../review-add-edit/review-add-edit.component';
 import { ReviewService } from '../../services/review.service';
-import { ReviewReaction } from '../../models/reviewReaction.enum';
-import {
-  faFaceLaughBeam,
-  faThumbsUp,
-  faThumbsDown,
-} from '@fortawesome/free-solid-svg-icons';
 
 export interface ReviewCardData {
   review: Review | ReviewWithMovie;
@@ -25,12 +19,6 @@ export class ReviewCardComponent {
   @Input({ required: true }) data!: ReviewCardData;
   @Input({ required: true }) first!: boolean;
 
-  ReviewReaction = ReviewReaction;
-
-  faFaceLaughBeam = faFaceLaughBeam;
-  faThumbsUp = faThumbsUp;
-  faThumbsDown = faThumbsDown;
-
   isReviewLiked: boolean = false;
 
   constructor(private reviewService: ReviewService) {}
@@ -44,22 +32,6 @@ export class ReviewCardComponent {
       rating: review.rating,
       text: review.review_text,
     };
-  }
-
-  updateReview(event: any) {
-    console.log('update ' + event);
-    this.reviewService.updateReview(event).subscribe((response) => {
-      if (response) {
-        this.data.refreshReviews();
-      }
-    });
-  }
-
-  deleteReview(id: string) {
-    this.reviewService.deleteReview(id).subscribe((response) => {
-      console.log(response);
-      this.data.refreshReviews();
-    });
   }
 
   shouldShowRating(): boolean {

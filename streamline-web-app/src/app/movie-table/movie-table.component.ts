@@ -305,7 +305,6 @@ export class MovieTableComponent implements OnInit {
   }
 
   private updateQueryParams(): void {
-    console.log(this.queryParams.genre);
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {

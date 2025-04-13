@@ -303,9 +303,6 @@ export class SettingsComponent implements OnInit {
       user: this.authService.user$.pipe(take(1)), // Observable for the current user
       watchProviders: this.moviesService.getWatchProviders(), // Observable for watch providers
     }).subscribe(({ user, watchProviders }) => {
-      console.log('User and Watch Providers:');
-      console.log(user);
-      console.log(watchProviders);
       if (user) {
         this.loggedInUserId = user['_id'];
         this.roles = user['myroles'];
@@ -320,9 +317,6 @@ export class SettingsComponent implements OnInit {
         this.selectedRegion = this.regionOptions.find(
           (option) => option.id === region
         );
-
-        console.log(this.selectedLanguages);
-        console.log(user['language']);
 
         this.userService.getUser(this.loggedInUserId).subscribe((response) => {
           this.user = response;

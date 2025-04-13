@@ -104,8 +104,6 @@ export class MoviesService {
   ): Observable<MovieRecommendationResponse> {
     const url = `${API_URL}recommendation/${user_id}`;
 
-    console.log(movie_id);
-
     return this.httpClient.get<MovieRecommendationResponse>(url, {
       params: this.queryParamBuilder.buildRecommendationParams(movie_id),
     });

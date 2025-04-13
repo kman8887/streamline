@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { forkJoin, merge, Observable, of } from 'rxjs';
-import { catchError, delay, map, shareReplay, take } from 'rxjs/operators';
-import { AppState, AuthService, User } from '@auth0/auth0-angular';
+import { Observable } from 'rxjs';
+import { map, shareReplay, take } from 'rxjs/operators';
+import { AuthService, User } from '@auth0/auth0-angular';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { User as UserModel } from '../models/user';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { RatingsOnboardingComponent } from '../ratings/ratings-onboarding/ratings-onboarding.component';
 import { MoviesService } from '../services/movies.service';
@@ -26,8 +27,6 @@ export class NavbarComponent implements OnInit {
       shareReplay()
     );
 
-  largeNavBarLogo = '/assets/image2vector (1).svg';
-  smallNavBarLogo = '/assets/image2vector (1).svg';
   creatingNew = false;
   isNavExpanded = false;
   user: User | undefined | null;
@@ -49,20 +48,18 @@ export class NavbarComponent implements OnInit {
       .pipe(take(1))
       .subscribe((response: any) => {
         this.user = response;
-        console.log(this.user);
         if (this.user) {
           if (!this.user['_id']) {
             this.userService
               .createUser()
               .pipe(take(1))
               .subscribe({
-                next: () => this.show(),
+                next: (response: UserModel) => this.show(response),
                 error: (err) => console.error('Error creating user:', err),
               });
           } else if (!this.user['onboarding_completed']) {
             this.show();
           } else {
-            console.log('generate recommendation');
             this.moviesService.createRecommendation().subscribe({
               next: () => {
                 console.log('Recommendation created successfully');
@@ -109,8 +106,11 @@ export class NavbarComponent implements OnInit {
     window.location.reload();
   }
 
-  show() {
+  show(response: UserModel | null = null): void {
     this.ref = this.dialogService.open(RatingsOnboardingComponent, {
+      data: {
+        user: response,
+      },
       header: 'Rate Movies',
       width: '100%',
       height: '100%',

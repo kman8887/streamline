@@ -35,8 +35,6 @@ export class LoadingService {
 
     const isAnyLoading = queue.size > 0;
     this.loadingSubjects.get(queueName)!.next(isAnyLoading);
-
-    console.log(`Queue "${queueName}" active:`, [...queue]);
   }
 
   resetQueue(queueName: string): void {

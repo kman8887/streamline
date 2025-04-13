@@ -21,18 +21,6 @@
       <div>
         {{ data.review.created_at | date : "mediumDate" }}
       </div>
-      <app-review-add-edit
-        [formData]="getEditReviewData(data.review)"
-        [id]="data.review.review_id"
-        (onSubmit)="updateReview($event)"
-        *ngIf="data.canEditAndDeleteReview"
-      >
-      </app-review-add-edit>
-      <p-button
-        (click)="deleteReview(data.review.review_id)"
-        label="Delete Review"
-        *ngIf="data.canEditAndDeleteReview"
-      ></p-button>
     </div>
   </div>
   <div class="flex-grow-1 flex flex-order-0 text gap-3">

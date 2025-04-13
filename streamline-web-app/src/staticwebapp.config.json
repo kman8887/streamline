@@ -12,6 +12,9 @@
     },
     {
       "route": "/settings*"
+    },
+    {
+      "route": "/about-us*"
     }
   ],
   "navigationFallback": {

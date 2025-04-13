@@ -46,7 +46,6 @@ export class ReviewAddEditComponent implements OnInit {
         ...form.value,
         id: this.id,
       };
-      console.log(createEditData);
       this.onSubmit.emit(createEditData);
       this.visible = false;
     }
