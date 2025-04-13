@@ -11,6 +11,7 @@ import { ReviewService } from '../../services/review.service';
 import { ReviewsResponse } from '../../models/reviewsResponse';
 import { Observable } from 'rxjs';
 import { ReviewCardData } from '../review-card/review-card.component';
+import { LoadingService } from '../../services/loading.service';
 
 export interface ReviewTableData {
   movieId?: string;
@@ -50,7 +51,10 @@ export class ReviewTableComponent implements OnInit {
 
   sortKey: string = '';
 
-  constructor(private reviewService: ReviewService) {}
+  constructor(
+    private reviewService: ReviewService,
+    public loadingService: LoadingService
+  ) {}
 
   ngOnInit(): void {
     this.getReviews();

@@ -6,7 +6,7 @@ export interface User {
   region: string;
   auth_id: string;
   creation_date: string;
-  avg_rating: number;
+  avg_rating: string;
   total_ratings: number;
   total_likes: number;
   total_reviews: number;

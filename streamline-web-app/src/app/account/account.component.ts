@@ -1,23 +1,14 @@
 import { Component } from '@angular/core';
-import { MoviesService, ReviewsQueryParams } from '../services/movies.service';
+import { ReviewsQueryParams } from '../services/movies.service';
 import { ActivatedRoute } from '@angular/router';
-import { PaginatorState } from 'primeng/paginator';
 import { UserService } from '../services/user.service';
-import { User } from '../models/user';
-import { Review } from '../models/movie';
-import {
-  faFaceLaughBeam,
-  faThumbsUp,
-  faThumbsDown,
-} from '@fortawesome/free-solid-svg-icons';
-import { ReviewReaction } from '../models/reviewReaction.enum';
-import { editReview } from '../reviews/review-add-edit/review-add-edit.component';
-import { AuthService } from '@auth0/auth0-angular';
-import { ReviewService } from '../services/review.service';
-import { Observable } from 'rxjs';
+import { User as UserModel } from '../models/user';
+import { AuthService, User } from '@auth0/auth0-angular';
+import { Observable, take } from 'rxjs';
 import { ReviewsResponse } from '../models/reviewsResponse';
 import { ReviewTableData } from '../reviews/review-table/review-table.component';
 import { LoadingService } from '../services/loading.service';
+import { TrackLoading } from '../decorators/track-loading.decorator';
 
 @Component({
   selector: 'app-account',
@@ -25,10 +16,11 @@ import { LoadingService } from '../services/loading.service';
   styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent {
-  user: User | undefined;
+  user: UserModel | undefined;
   loggedInUserId: string = '';
   roles: string[] = [];
   average_rating = '';
+  showEdit = false;
 
   reviewTableData?: ReviewTableData;
 
@@ -36,7 +28,7 @@ export class AccountComponent {
     private userService: UserService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private loadingService: LoadingService
+    public loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {
@@ -49,19 +41,27 @@ export class AccountComponent {
       .getUser(this.route.snapshot.params['id'])
       .subscribe((response) => {
         this.user = response;
-        this.average_rating = this.user.avg_rating.toFixed(2);
+        this.average_rating = parseFloat(this.user.avg_rating).toFixed(2);
       });
   }
 
   getCurrentUser(): void {
-    this.authService.user$.subscribe((response: any) => {
-      if (response) {
-        this.loggedInUserId = response._id;
-        this.roles = response.myroles;
-      }
+    this.loadUser$()
+      .pipe(take(1))
+      .subscribe((response: any) => {
+        if (response) {
+          this.loggedInUserId = response._id;
+          this.roles = response.myroles;
 
-      this.setReviewTableData();
-    });
+          if (this.loggedInUserId === this.route.snapshot.params['id']) {
+            this.showEdit = true;
+          } else {
+            this.showEdit = false;
+          }
+        }
+
+        this.setReviewTableData();
+      });
   }
 
   private setReviewTableData(): void {
@@ -81,5 +81,10 @@ export class AccountComponent {
 
   getAvatar(avatarUrl: string): string {
     return avatarUrl.replace('.jpg', '_full.jpg');
+  }
+
+  @TrackLoading()
+  private loadUser$(): Observable<User | null | undefined> {
+    return this.authService.user$;
   }
 }

@@ -3,7 +3,7 @@
     <div class="tableOuter w-full">
       <div class="tableHeader">
         <span class="w-full mb-1 records">{{ totalRecords }} Results</span>
-        <div class="flex flex-column md:flex-row md:justify-content-between">
+        <div class="flex flex-row justify-content-between">
           <p-dropdown
             [options]="sortOptions"
             [(ngModel)]="sortKey"
@@ -17,15 +17,6 @@
             (onSubmit)="addReview($event)"
           >
           </app-review-add-edit>
-          <!-- <p-multiSelect
-            [options]="reviewTypeFilterOptions"
-            (onChange)="onFilterChange($event)"
-            [(ngModel)]="queryParams.isRecommended"
-            placeholder="Review Type"
-            [filter]="false"
-            [selectAll]="false"
-            class="w-full max-w-17rem w-17rem"
-          ></p-multiSelect> -->
           <div class="max-w-17rem w-17rem priceSlider py-2 px-4">
             <div class="priceLabel mb-2">
               {{ ratingSliderValues | ratingsFilter }}
@@ -42,18 +33,31 @@
           </div>
         </div>
       </div>
-      <div class="grid grid-nogutter tableContent">
-        <div class="col-12" *ngFor="let review of reviews; let first = first">
+      <div
+        *ngIf="
+          (loadingService.getLoading$('reviews-table') | async) === false;
+          else loadingTemplate
+        "
+        class="grid grid-nogutter tableContent"
+      >
+        <div class="w-full" *ngFor="let review of reviews; let first = first">
           <app-review-card [data]="review" [first]="first"></app-review-card>
-          <!-- </div> -->
         </div>
       </div>
       <div
         class="text-2xl font-bold text-900 flex align-items-center m-auto w-full justify-content-center p-8"
-        *ngIf="reviews.length == 0"
+        *ngIf="
+          reviews.length == 0 &&
+          (loadingService.getLoading$('reviews-table') | async) === false
+        "
       >
         No Reviews
       </div>
+      <ng-template #loadingTemplate>
+        <div class="spinner-div">
+          <p-progressSpinner></p-progressSpinner>
+        </div>
+      </ng-template>
       <p-paginator
         (onPageChange)="onPageChange($event)"
         [first]="0"

@@ -47,6 +47,7 @@ export class RatingsOnboardingComponent implements OnDestroy {
   }
 
   getMovies(): void {
+    console.log('getMovies');
     this.loading.set(true);
 
     if (this.moviesSubscription) {
@@ -103,7 +104,7 @@ export class RatingsOnboardingComponent implements OnDestroy {
   }
 
   rateMovie() {
-    console.log(this.rating);
+    console.log('rating ' + this.rating);
     const currentIndex = this.movies.findIndex(
       (movie) => movie.id === this.movie.id
     );
@@ -129,9 +130,13 @@ export class RatingsOnboardingComponent implements OnDestroy {
   }
 
   private nextMovie() {
+    console.log('next movie');
     const currentIndex = this.movies.findIndex(
       (movie) => movie.id === this.movie.id
     );
+
+    console.log('index ' + currentIndex);
+
     if (currentIndex !== -1 && currentIndex < this.movies.length - 1) {
       this.movie = this.movies[currentIndex + 1];
       if (this.movie.rating !== undefined && this.movie.rating !== null) {

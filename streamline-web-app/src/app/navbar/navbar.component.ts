@@ -50,14 +50,28 @@ export class NavbarComponent implements OnInit {
       .subscribe((response: any) => {
         this.user = response;
         console.log(this.user);
-        if (this.user && !this.user['_id']) {
-          this.userService
-            .createUser()
-            .pipe(take(1))
-            .subscribe({
-              next: () => this.show(),
-              error: (err) => console.error('Error creating user:', err),
+        if (this.user) {
+          if (!this.user['_id']) {
+            this.userService
+              .createUser()
+              .pipe(take(1))
+              .subscribe({
+                next: () => this.show(),
+                error: (err) => console.error('Error creating user:', err),
+              });
+          } else if (!this.user['onboarding_completed']) {
+            this.show();
+          } else {
+            console.log('generate recommendation');
+            this.moviesService.createRecommendation().subscribe({
+              next: () => {
+                console.log('Recommendation created successfully');
+              },
+              error: (err) => {
+                console.error('Error toggling watch:', err);
+              },
             });
+          }
         }
       });
   }
